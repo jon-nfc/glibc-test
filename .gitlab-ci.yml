@@ -1,0 +1,162 @@
+---
+
+variables:
+  ANSIBLE_FORCE_COLOR: 'true'
+  DOCKER_IMAGE_BUILD_REGISTRY: $CI_REGISTRY_IMAGE
+  DOCKER_IMAGE_BUILD_NAME: 'foreman'
+  DOCKER_IMAGE_BUILD_TAG: 3.9.1
+  DOCKER_IMAGE_BUILD_TARGET_PLATFORMS: "linux/amd64,linux/arm64"
+  # DOCKER_IMAGE_PUBLISH_NAME: 'awx'
+  # DOCKER_IMAGE_PUBLISH_REGISTRY: docker.io/nofusscomputing
+  # DOCKER_IMAGE_PUBLISH_URL: https://hub.docker.com/r/nofusscomputing/$DOCKER_IMAGE_PUBLISH_NAME
+
+
+stages:
+  - preperation
+  - build
+  - publish
+
+
+include:
+  - project: nofusscomputing/projects/gitlab-ci
+    ref: development
+    file:
+      - docker/publish.gitlab-ci.yaml
+
+
+# .OfficialRelease:
+#   stage: preperation
+#   image: nofusscomputing/ansible-ee:dev
+#   before_script:
+#     - pip3 install ansible
+#     - git remote remove origin
+#     - git remote add origin https://gitlab-ci-token:$GIT_COMMIT_TOKEN@gitlab.com/$CI_PROJECT_PATH.git
+#   rules:
+#     - when: never
+
+
+# Official Release Check:
+#   extends: .OfficialRelease
+#   script:
+#     - ansible-playbook automagic.yaml --tags check -vvv
+#   artifacts:
+#     untracked: true
+#     when: on_success
+#     expire_in: "1 year"
+#     paths:
+#       - ansible.log
+#   rules:
+#     - if: $CI_COMMIT_TAG
+#       when: never
+#     - when: always
+
+
+# Official Release Fetch:
+#   extends: .OfficialRelease
+#   script:
+#     - ansible-playbook automagic.yaml --tags build -vvv
+#   artifacts:
+#     untracked: true
+#     when: on_success
+#     expire_in: "1 year"
+#     paths:
+#       - ansible.log
+#       - awx
+#   rules:
+#     - if: $NO_BUILD
+#       when: never
+#     - if: $CI_COMMIT_TAG
+#       when: always
+#     - when: never
+
+
+
+
+.build_docker_container:
+  stage: prepare
+  image: 
+    name: nofusscomputing/docker-buildx-qemu:dev
+    pull_policy: always
+  services:
+    - name: docker:23-dind
+      entrypoint: ["env", "-u", "DOCKER_HOST"]
+      command: ["dockerd-entrypoint.sh"]
+  variables:
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_DRIVER: overlay2
+    DOCKER_DOCKERFILE: Dockerfile
+    # See https://github.com/docker-library/docker/pull/166
+    DOCKER_TLS_CERTDIR: ""
+    # DOCKER_BUILD_ARGS: # Optional
+  before_script:
+    - git submodule foreach git submodule update --init
+    - docker info
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+    - update-binfmts --display
+    - update-binfmts --enable # Important: Ensures execution of other binary formats is enabled in the kernel
+    - docker buildx create --driver=docker-container --driver-opt image=moby/buildkit:v0.11.6 --use
+    - docker buildx inspect --bootstrap
+  script: 
+
+    - update-binfmts --display
+
+    - | # Clone Foreman
+      echo "Cloning tag ${DOCKER_IMAGE_BUILD_TAG}";
+
+      git clone --depth 1 --branch ${DOCKER_IMAGE_BUILD_TAG} https://github.com/theforeman/foreman.git build;
+
+      cp ./Gemfile.local.rb build/bundler.d/;
+
+      echo "copied plugins gemfile";
+
+      ls -l build/bundler.d/;
+
+      cd build;
+
+      ls -l;
+
+    - |
+        echo "[DEBUG] building multiarch/specified arch image";
+
+        docker buildx build --platform=$DOCKER_IMAGE_BUILD_TARGET_PLATFORMS . \
+          --label org.opencontainers.image.created="$(date '+%Y-%m-%d %H:%M:%S%:z')" \
+          --label org.opencontainers.image.documentation="https://nofusscomputing/" \
+          --label org.opencontainers.image.source="$CI_PROJECT_URL" \
+          --label org.opencontainers.image.revision="$CI_COMMIT_SHA" \
+        --push \
+        --file $DOCKER_DOCKERFILE \
+        --tag $DOCKER_IMAGE_BUILD_REGISTRY/$DOCKER_IMAGE_BUILD_NAME:$DOCKER_IMAGE_BUILD_TAG;
+
+        docker buildx imagetools inspect $DOCKER_IMAGE_BUILD_REGISTRY/$DOCKER_IMAGE_BUILD_NAME:$DOCKER_IMAGE_BUILD_TAG;
+
+        # during docker multi platform build there are >=3 additional unknown images added to gitlab container registry. cleanup
+        
+        DOCKER_MULTI_ARCH_IMAGES=$(docker buildx imagetools inspect "$DOCKER_IMAGE_BUILD_REGISTRY/$DOCKER_IMAGE_BUILD_NAME:$DOCKER_IMAGE_BUILD_TAG" --format "{{ range .Manifest.Manifests }}{{ if ne (print .Platform) \"&{unknown unknown  [] }\" }}$DOCKER_IMAGE_BUILD_REGISTRY/$DOCKER_IMAGE_BUILD_NAME:$DOCKER_IMAGE_BUILD_TAG@{{ println .Digest }}{{end}} {{end}}");
+
+        docker buildx imagetools create $DOCKER_MULTI_ARCH_IMAGES --tag $DOCKER_IMAGE_BUILD_REGISTRY/$DOCKER_IMAGE_BUILD_NAME:$DOCKER_IMAGE_BUILD_TAG;
+
+        docker buildx imagetools inspect $DOCKER_IMAGE_BUILD_REGISTRY/$DOCKER_IMAGE_BUILD_NAME:$DOCKER_IMAGE_BUILD_TAG;
+
+
+
+
+Build foreman:
+  extends: .build_docker_container
+  needs: []
+  rules:
+    - if:
+        $CI_COMMIT_BRANCH != ''
+      when: always
+    - when: never
+
+
+
+# Docker Hub Publish:
+#   extends: .publish-docker-hub
+#   resource_group: build
+#   rules:
+#     - if: $CI_COMMIT_TAG
+#       when: always
+#     - when: never
+
