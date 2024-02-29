@@ -40,6 +40,7 @@ RUN \
 
 
 # SoF Custom
+# https://thelinuxcluster.com/2023/06/30/compiling-glibc-2-29-at-centos-7/
 RUN \
   dnf install -y wget; \
   which glibc; \
@@ -50,9 +51,9 @@ RUN \
   cd build_dir; \
   # ../configure --prefix=/opt/glibc; \
   ../configure --prefix=/usr/local/glibc-2.29; \
-  make; \
+  make -j8; \
   make install; \
-  ls -lR /opt/glibc; \
+  ls -lR /usr/local/; \
   dnf clean all
 
 # EoF Custom
