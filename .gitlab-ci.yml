@@ -73,7 +73,7 @@ include:
 
 
 .build_docker_container:
-  stage: prepare
+  stage: build
   image: 
     name: nofusscomputing/docker-buildx-qemu:dev
     pull_policy: always
