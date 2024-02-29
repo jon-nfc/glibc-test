@@ -65,7 +65,7 @@ RUN \
   make -C locale all-mo && \
   mv -v db/schema.rb.nulldb db/schema.rb && \
   # SoF Custom \
-  gem install nokogiri --platform=ruby -v 1.15.5 \
+  gem install nokogiri:1.15.5 --platform=ruby && \
   # EoF Custom \
   bundle exec rake assets:clean assets:precompile
 
