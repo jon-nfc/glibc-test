@@ -53,6 +53,11 @@ RUN bundle install && \
   rm -rf vendor/ruby/*/cache/*.gem && \
   find vendor/ruby/*/gems -name "*.c" -delete && \
   find vendor/ruby/*/gems -name "*.o" -delete
+
+# SoF Custom
+RUN gem install nokogiri --platform=ruby
+# EoF Custom
+
 RUN \
   # SoF custom \
   bundle config set force_ruby_platform true && \
