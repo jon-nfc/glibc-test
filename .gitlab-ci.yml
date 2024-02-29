@@ -108,6 +108,12 @@ include:
 
       cp ./Gemfile.local.rb build/bundler.d/;
 
+      cp -f ./Dockerfile build/Dockerfile;
+
+      echo "copied dockerfile";
+
+      cat build/Dockerfile;
+
       echo "copied plugins gemfile";
 
       ls -l build/bundler.d/;
