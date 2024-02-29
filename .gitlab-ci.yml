@@ -22,7 +22,7 @@ include:
     ref: development
     file:
       - docker/publish.gitlab-ci.yaml
-
+      - .gitlab-ci_common.yaml
 
 # .OfficialRelease:
 #   stage: preperation
