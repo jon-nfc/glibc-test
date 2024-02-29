@@ -42,14 +42,17 @@ RUN \
 # SoF Custom
 RUN \
   dnf install -y wget; \
+  which glibc; \
   wget -4c https://ftp.gnu.org/gnu/glibc/glibc-2.29.tar.gz; \
   tar -zxvf glibc-2.29.tar.gz; \
   cd glibc-2.29; \
   mkdir build_dir; \
   cd build_dir; \
-  ../configure --prefix=/opt/glibc; \
+  # ../configure --prefix=/opt/glibc; \
+  ../configure --prefix=/usr/local/glibc-2.29; \
   make; \
   make install; \
+  ls -lR /opt/glibc; \
   dnf clean all
 
 # EoF Custom
@@ -78,7 +81,7 @@ RUN bundle install && \
 
 RUN \
   # SoF custom \
-  bundle config set force_ruby_platform true && \
+  # bundle config set force_ruby_platform true && \
   # Eof Custom \
   make -C locale all-mo && \
   mv -v db/schema.rb.nulldb db/schema.rb && \
