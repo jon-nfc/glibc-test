@@ -31,6 +31,16 @@ ENV FOREMAN_APIPIE_LANGS=en
 ENV BUNDLER_SKIPPED_GROUPS="test development openid libvirt journald facter console"
 
 RUN \
+  wget -4c https://ftp.gnu.org/gnu/glibc/glibc-2.29.tar.gz; \
+  tar -zxvf glibc-2.29.tar.gz; \
+  cd glibc-2.29; \
+  mkdir build_dir; \
+  cd build_dir; \
+  ../configure --prefix=/opt/glibc; \
+  make; \
+  make install;
+
+RUN \
   dnf install -y redhat-rpm-config git-core \
     gcc-c++ make bzip2 gettext tar \
     libxml2-devel libcurl-devel ruby-devel \
@@ -65,7 +75,7 @@ RUN \
   make -C locale all-mo && \
   mv -v db/schema.rb.nulldb db/schema.rb && \
   # SoF Custom \
-  gem install nokogiri:1.15.5 --platform=ruby && \
+  # gem install nokogiri:1.15.5 --platform=ruby && \
   # EoF Custom \
   bundle exec rake assets:clean assets:precompile
 
