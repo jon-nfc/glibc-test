@@ -31,6 +31,17 @@ ENV FOREMAN_APIPIE_LANGS=en
 ENV BUNDLER_SKIPPED_GROUPS="test development openid libvirt journald facter console"
 
 RUN \
+  dnf install -y redhat-rpm-config git-core \
+    gcc-c++ make bzip2 gettext tar \
+    libxml2-devel libcurl-devel ruby-devel \
+    postgresql-devel && \
+  dnf clean all
+
+
+
+# SoF Custom
+RUN \
+  dnf install -y wget; \
   wget -4c https://ftp.gnu.org/gnu/glibc/glibc-2.29.tar.gz; \
   tar -zxvf glibc-2.29.tar.gz; \
   cd glibc-2.29; \
@@ -38,14 +49,11 @@ RUN \
   cd build_dir; \
   ../configure --prefix=/opt/glibc; \
   make; \
-  make install;
-
-RUN \
-  dnf install -y redhat-rpm-config git-core \
-    gcc-c++ make bzip2 gettext tar \
-    libxml2-devel libcurl-devel ruby-devel \
-    postgresql-devel && \
+  make install; \
   dnf clean all
+
+# EoF Custom
+
 
 ENV DATABASE_URL=nulldb://nohost
 
