@@ -42,7 +42,7 @@ RUN \
 # SoF Custom
 # https://thelinuxcluster.com/2023/06/30/compiling-glibc-2-29-at-centos-7/
 RUN \
-  dnf install -y wget; \
+  dnf install -y wget bison python; \
   which glibc; \
   wget -4c https://ftp.gnu.org/gnu/glibc/glibc-2.29.tar.gz; \
   tar -zxvf glibc-2.29.tar.gz; \
