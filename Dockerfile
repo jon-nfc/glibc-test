@@ -54,9 +54,9 @@ RUN bundle install && \
   find vendor/ruby/*/gems -name "*.c" -delete && \
   find vendor/ruby/*/gems -name "*.o" -delete
 
-# SoF Custom
-RUN gem install nokogiri --platform=ruby
-# EoF Custom
+# # SoF Custom
+# RUN gem install nokogiri --platform=ruby -v 1.15.5
+# # EoF Custom
 
 RUN \
   # SoF custom \
@@ -64,6 +64,9 @@ RUN \
   # Eof Custom \
   make -C locale all-mo && \
   mv -v db/schema.rb.nulldb db/schema.rb && \
+  # SoF Custom \
+  gem install nokogiri --platform=ruby -v 1.15.5 \
+  # EoF Custom \
   bundle exec rake assets:clean assets:precompile
 
 RUN npm install --no-audit --no-optional && \
