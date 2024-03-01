@@ -156,7 +156,8 @@ Build foreman:
   extends: .build_docker_container
   needs: []
   variables:
-    DOCKER_IMAGE_BUILD_TARGET_PLATFORMS: "linux/arm64,linux/amd64"
+    DOCKER_IMAGE_BUILD_TARGET_PLATFORMS: "linux/arm64"
+    DOCKER_IMAGE_BUILD_NAME: 'foreman-arm'
   rules:
     - if:
         $CI_COMMIT_BRANCH != ''
