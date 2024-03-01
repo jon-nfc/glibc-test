@@ -102,25 +102,30 @@ include:
     - update-binfmts --display
 
     - | # Clone Foreman
-      echo "Cloning tag ${DOCKER_IMAGE_BUILD_TAG}";
 
-      git clone --depth 1 --branch ${DOCKER_IMAGE_BUILD_TAG} https://github.com/theforeman/foreman.git build;
+      if [ "0$NO_COMMAND" == '0' ]; then 
 
-      cp ./Gemfile.local.rb build/bundler.d/;
+        echo "Cloning tag ${DOCKER_IMAGE_BUILD_TAG}";
 
-      cp -f ./Dockerfile build/Dockerfile;
+        git clone --depth 1 --branch ${DOCKER_IMAGE_BUILD_TAG} https://github.com/theforeman/foreman.git build;
 
-      echo "copied dockerfile";
+        cp ./Gemfile.local.rb build/bundler.d/;
 
-      cat build/Dockerfile;
+        cp -f ./Dockerfile build/Dockerfile;
 
-      echo "copied plugins gemfile";
+        echo "copied dockerfile";
 
-      ls -l build/bundler.d/;
+        cat build/Dockerfile;
 
-      cd build;
+        echo "copied plugins gemfile";
 
-      ls -l;
+        ls -l build/bundler.d/;
+
+        cd build;
+
+        ls -l;
+      
+      fi;
 
     - |
         echo "[DEBUG] building multiarch/specified arch image";
@@ -156,6 +161,21 @@ Build foreman:
       when: always
     - when: never
 
+
+glibc 2.29:
+  extends: .build_docker_container
+  needs: []
+  variables:
+    NO_COMMAND: adsa
+    DOCKER_DOCKERFILE: Dockerfile-glibc
+    DOCKER_IMAGE_BUILD_NAME: 'glibc'
+    DOCKER_IMAGE_BUILD_TAG: '2.29'
+    DOCKER_IMAGE_BUILD_TARGET_PLATFORMS: "linux/arm64"
+  rules:
+    - if:
+        $CI_COMMIT_BRANCH != ''
+      when: always
+    - when: never
 
 
 # Docker Hub Publish:

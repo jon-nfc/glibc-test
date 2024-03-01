@@ -39,24 +39,24 @@ RUN \
 
 
 
-# SoF Custom
-# https://thelinuxcluster.com/2023/06/30/compiling-glibc-2-29-at-centos-7/
-RUN \
-  dnf install -y wget bison python3.11; \
-  which glibc; \
-  wget -4c https://ftp.gnu.org/gnu/glibc/glibc-2.29.tar.gz; \
-  tar -zxvf glibc-2.29.tar.gz; \
-  cd glibc-2.29; \
-  mkdir build_dir; \
-  cd build_dir; \
-  # ../configure --prefix=/opt/glibc; \
-  ../configure --prefix=/usr/local/glibc-2.29; \
-  #make -j8 | tee make.log; \
-  #make install; \
-  #ls -lR /usr/local/; \
-  dnf clean all
+# # SoF Custom
+# # https://thelinuxcluster.com/2023/06/30/compiling-glibc-2-29-at-centos-7/
+# RUN \
+#   dnf install -y wget bison python3.11; \
+#   which glibc; \
+#   wget -4c https://ftp.gnu.org/gnu/glibc/glibc-2.29.tar.gz; \
+#   tar -zxvf glibc-2.29.tar.gz; \
+#   cd glibc-2.29; \
+#   mkdir build_dir; \
+#   cd build_dir; \
+#   # ../configure --prefix=/opt/glibc; \
+#   ../configure --prefix=/usr/local/glibc-2.29; \
+#   #make -j8 | tee make.log; \
+#   #make install; \
+#   #ls -lR /usr/local/; \
+#   dnf clean all
 
-# EoF Custom
+# # EoF Custom
 
 
 ENV DATABASE_URL=nulldb://nohost
