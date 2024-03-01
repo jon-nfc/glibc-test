@@ -31,6 +31,6 @@ jobs:
           platforms: linux/arm64
           push: true
           tags: ghcr.io/${{ github.repository_owner }}/glibc229:${{ github.sha }}
-          dockerfile: Dockerfile-glibc
+          file: Dockerfile-glibc
           cache-from: type=gha
           cache-to: type=gha,mode=max
