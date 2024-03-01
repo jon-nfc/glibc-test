@@ -1,6 +1,13 @@
 # Base container that is used for both building and running the app
 FROM quay.io/centos/centos:stream8 as base
 
+RUN \
+  dnf install -y redhat-rpm-config git-core \
+    gcc-c++ make bzip2 gettext tar \
+    libxml2-devel libcurl-devel ruby-devel \
+    postgresql-devel && \
+  dnf clean all
+
 # SoF Custom
 # https://thelinuxcluster.com/2023/06/30/compiling-glibc-2-29-at-centos-7/
 RUN \
