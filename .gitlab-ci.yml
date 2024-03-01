@@ -155,6 +155,8 @@ include:
 Build foreman:
   extends: .build_docker_container
   needs: []
+  variables:
+    DOCKER_IMAGE_BUILD_TARGET_PLATFORMS: "linux/arm64,linux/amd64"
   rules:
     - if:
         $CI_COMMIT_BRANCH != ''
@@ -174,7 +176,8 @@ glibc 2.29:
   rules:
     - if:
         $CI_COMMIT_BRANCH != ''
-      when: always
+      allow_failure: true
+      when: manual
     - when: never
   tags:
     # https://docs.gitlab.com/ee/ci/runners/saas/linux_saas_runner.html
