@@ -176,6 +176,8 @@ glibc 2.29:
         $CI_COMMIT_BRANCH != ''
       when: always
     - when: never
+  tags:
+    - saas-linux-large-amd64
 
 
 # Docker Hub Publish:
