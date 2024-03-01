@@ -51,9 +51,9 @@ RUN \
   cd build_dir; \
   # ../configure --prefix=/opt/glibc; \
   ../configure --prefix=/usr/local/glibc-2.29; \
-  make -j8 | tee make.log; \
-  make install; \
-  ls -lR /usr/local/; \
+  #make -j8 | tee make.log; \
+  #make install; \
+  #ls -lR /usr/local/; \
   dnf clean all
 
 # EoF Custom
