@@ -82,7 +82,7 @@ RUN bundle install && \
 
 RUN \
   # SoF custom \
-  # bundle config set force_ruby_platform true && \
+  bundle config set force_ruby_platform true && \
   # Eof Custom \
   make -C locale all-mo && \
   mv -v db/schema.rb.nulldb db/schema.rb && \
