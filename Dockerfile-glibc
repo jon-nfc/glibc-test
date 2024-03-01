@@ -33,5 +33,7 @@ RUN \
   make install; \
   dnf clean all
 
+
+ENV LD_LIBRARY_PATH=/usr/local/glibc-2.29/lib
 # EoF Custom
 
