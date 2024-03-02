@@ -9,7 +9,8 @@ RUN mkdir -p ${HOME}
 
 WORKDIR ${HOME}
 
-ENV GEM_HOME "${HOME}/vendor/ruby/2.7.0"
+# ENV GEM_HOME "${HOME}/vendor/ruby/2.7.0"
+ENV BUNDLE_APP_CONFIG=''
 
 RUN gem install rake bundler:2.4.22;
 
@@ -23,7 +24,8 @@ FROM base as builder
 
 ARG HOME=/home/foreman
 
-ENV GEM_HOME "${HOME}/vendor/ruby/2.7.0"
+# ENV GEM_HOME "${HOME}/vendor/ruby/2.7.0"
+ENV BUNDLE_APP_CONFIG=''
 # ENV BUNDLE_APP_CONFIG ""
 
 RUN apk add \
@@ -80,7 +82,7 @@ RUN cd ${HOME}; rm -rf vendor/ruby/*/cache vendor/ruby/*/gems/*/node_modules bun
   bundle install
 
 
-RUN echo ""; ls -la ${HOME}
+RUN echo "1"; ls -la ${HOME}; ls -laR ${HOME}/.bundle
 
 
 ##########################################################################
@@ -91,6 +93,7 @@ RUN echo ""; ls -la ${HOME}
 FROM base
 
 # ENV GEM_HOME ""
+ENV BUNDLE_APP_CONFIG=''
 
 ARG HOME=/home/foreman
 
@@ -107,6 +110,7 @@ WORKDIR ${HOME}
 COPY --from=builder /tmp/app/. ${HOME}/
 
 # RUN ls -l ${HOME}
+COPY --from=builder ${HOME}/.bundle/config ${HOME}/.bundle/config
 
 COPY --from=builder ${HOME}/config ${HOME}/config
 
