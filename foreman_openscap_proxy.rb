@@ -6,7 +6,7 @@ mkdir -p /usr/local/bundle/bundler.d
 
 
 
-apk add alpine-sdk libffi-dev
+apk add alpine-sdk libffi-dev ruby-dev
 
 git clone --depth=1 -b v0.9.2 https://github.com/theforeman/smart_proxy_openscap.git
 
@@ -20,6 +20,12 @@ gem build
 
 git clone --depth=1 --branch 3.9.1 https://github.com/theforeman/smart-proxy.git
 
+rm bundler.d/libvirt.rb
+rm bundler.d/krb5.rb
+rm bundler.d/realm_freeipa.rb
+rm bundler.d/windows.rb
+rm bundler.d/bmc.rb
+rm bundler.d/journald.rb
 
 
 dockerfile
