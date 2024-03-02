@@ -1,6 +1,8 @@
 
 FROM ruby:2.7-alpine3.16 as base
 
+RUN export
+
 ARG HOME=/home/foreman
 
 RUN mkdir -p ${HOME}
@@ -72,7 +74,7 @@ ENV BUNDLER_SKIPPED_GROUPS="test development openid libvirt journald facter cons
 # ENV BUNDLE_APP_CONFIG=
 WORKDIR ${HOME}
 
-RUN export GEM_HOME=; export BUNDLE_APP_CONFIG=
+# RUN export GEM_HOME=; export BUNDLE_APP_CONFIG=
 # RUN ls -la; rm -rf .bundle; mkdir -p .bundle; \
 #   echo "---" > .bundle/config; \
 #   echo '"BUNDLE_PATH: "vendor"' > .bundle/config; \
@@ -80,16 +82,20 @@ RUN export GEM_HOME=; export BUNDLE_APP_CONFIG=
 
 RUN export
 
-RUN bundle config list
+RUN echo $PWD
+
+RUN ls -la; cat .bundle/config
+
+# RUN bundle config list
 
 # RUN bundle --path=vendor; ls -la; ls -la .bundle/
 
-RUN bundle config set --local without "${BUNDLER_SKIPPED_GROUPS}"; \
-  bundle config set --local clean true; \
-  bundle config set --local path vendor; \
-  bundle config set --local jobs 5; \
-  bundle config set --local retry 3; \
-  ls -la;
+# RUN bundle config set --local without "${BUNDLER_SKIPPED_GROUPS}"; \
+#   bundle config set --local clean true; \
+#   bundle config set --local path vendor; \
+#   bundle config set --local jobs 5; \
+#   bundle config set --local retry 3; \
+#   ls -la;
 
 
 

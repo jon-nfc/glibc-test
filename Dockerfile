@@ -11,10 +11,11 @@ RUN apk add -U tzdata gettext bash postgresql mysql-client npm netcat-openbsd \
 
 ENV FOREMAN_FQDN docker-swarm-01.kstm.lab.net
 ENV FOREMAN_DOMAIN kstm.lab.net
-ENV BUNDLE_APP_CONFIG=''
 
 ARG HOME=/home/foreman
 WORKDIR $HOME
+ENV BUNDLE_APP_CONFIG='${home}/vendor/bundle'
+
 
 RUN bundle config set --local without "${BUNDLER_SKIPPED_GROUPS}"; \
   bundle config set --local clean true; \
@@ -46,7 +47,7 @@ ENV FOREMAN_APIPIE_LANGS en
 ENV BUNDLER_SKIPPED_GROUPS "test development openid libvirt journald facter console"
 # ENV DATABASE_URL=sqlite3:tmp/bootstrap-db.sql
 ENV DATABASE_URL=nulldb://nohost
-ENV BUNDLE_APP_CONFIG=''
+# ENV BUNDLE_APP_CONFIG=''
 ARG HOME=/home/foreman
 USER foreman
 WORKDIR $HOME
@@ -123,7 +124,7 @@ ARG HOME=/home/foreman
 ARG RAILS_ENV=production
 ENV RAILS_SERVE_STATIC_FILES=true
 ENV RAILS_LOG_TO_STDOUT=true
-ENV BUNDLE_APP_CONFIG=''
+# ENV BUNDLE_APP_CONFIG=''
 
 USER foreman
 WORKDIR ${HOME}
