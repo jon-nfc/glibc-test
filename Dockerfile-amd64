@@ -150,15 +150,18 @@ COPY --from=foreman-builder --chown=foreman:foreman ${HOME}/Gemfile.lock ${HOME}
 COPY --from=foreman-builder --chown=foreman:foreman ${HOME}/vendor/ruby ${HOME}/vendor/ruby
 COPY --from=foreman-builder --chown=foreman:foreman ${HOME}/public ${HOME}/public
 
+
+COPY Gemfile.local-amd64.rb ${HOME}/bundler.d/Gemfile.local.rb
+
 # RUN echo gem '"rdoc"' > bundler.d/container.rb && echo gem '"tzinfo-data"' >> bundler.d/container.rb
 
 RUN date -u > BUILD_TIME
 
-# RUN cp ${HOME}/extras/containers/entrypoint.sh /usr/bin/; 
+RUN cp ${HOME}/extras/containers/entrypoint.sh /usr/bin/; 
 
-# RUN chmod +x /usr/bin/entrypoint.sh
+RUN chmod +x /usr/bin/entrypoint.sh
 
-# ENTRYPOINT ["entrypoint.sh"]
+ENTRYPOINT ["entrypoint.sh"]
 
 
 # Start the main process.
