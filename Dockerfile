@@ -1,7 +1,7 @@
 # Base container that is used for both building and running the app
-# FROM registry.gitlab.com/nofusscomputing/infrastructure/configuration-management/foreman/glibc:2.29 as base
+FROM registry.gitlab.com/nofusscomputing/infrastructure/configuration-management/foreman/glibc:2.29 as base
 
-FROM quay.io/centos/centos:stream8 as base
+# FROM quay.io/centos/centos:stream8 as base
 
 # 3.3
 # ARG RUBY_VERSION="3.1"
@@ -45,10 +45,10 @@ RUN \
     postgresql-devel && \
   dnf clean all
 
-RUN \
-  # SoF Custom
-  dnf install -y zlib-devel xz patch; \
-  gem install nokogiri --platform=ruby;
+# RUN \
+#   # SoF Custom
+#   dnf install -y zlib-devel xz patch; \
+#   gem install nokogiri --platform=ruby;
 
 
 # # SoF Custom
@@ -85,7 +85,8 @@ RUN bundle config set --local without "${BUNDLER_SKIPPED_GROUPS}" && \
 RUN \
   # SoF Custom
   dnf install -y zlib-devel xz patch; \
-  gem install nokogiri --platform=ruby; \
+  # gem install nokogiri --platform=ruby; \
+  export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:usr/local/glibc-2.29; \
   #dnf install -y rubygem-nokogiri; \
   # EoF Custom
   bundle install && \
