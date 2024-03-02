@@ -15,10 +15,6 @@ RUN \
   dnf install -y postgresql-libs ruby{,gems} rubygem-{rake,bundler} npm nc hostname && \
   dnf clean all
 
-RUN \
-  # SoF Custom
-  dnf install -y zlib-devel xz patch; \
-  gem install nokogiri --platform=ruby;
 
 
 ARG HOME=/home/foreman
@@ -47,6 +43,10 @@ RUN \
     postgresql-devel && \
   dnf clean all
 
+RUN \
+  # SoF Custom
+  dnf install -y zlib-devel xz patch; \
+  gem install nokogiri --platform=ruby;
 
 
 # # SoF Custom
