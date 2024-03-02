@@ -19,7 +19,7 @@ ENV FOREMAN_DOMAIN=example.com
 #   dnf install -y postgresql-libs ruby{,gems} rubygem-{rake,bundler} npm nc hostname && \
 #   dnf clean all
 
-
+ENV LD_LIBRARY_PATH ""
 
 ARG HOME=/home/foreman
 WORKDIR $HOME
@@ -53,7 +53,7 @@ ENV BUNDLER_SKIPPED_GROUPS="test development openid libvirt journald facter cons
 RUN \
   # SoF Custom
   dnf install -y zlib-devel xz patch; \
-  gem install nokogiri --platform=ruby;
+  LD_LIBRARY_PATH=/usr/local/glibc-2.29/lib gem install nokogiri --platform=ruby;
 
 
 # # SoF Custom
