@@ -144,7 +144,7 @@ USER foreman
 WORKDIR ${HOME}
 # COPY --chown=foreman . ${HOME}/
 COPY --from=foreman-builder /tmp/app/. ${HOME}/
-COPY --from=foreman-builder /usr/bin/entrypoint.sh /usr/bin/entrypoint.sh
+# COPY --from=foreman-builder /usr/bin/entrypoint.sh /usr/bin/entrypoint.sh
 COPY --from=foreman-builder --chown=foreman:foreman ${HOME}/.bundle/config ${HOME}/.bundle/config
 COPY --from=foreman-builder --chown=foreman:foreman ${HOME}/Gemfile.lock ${HOME}/Gemfile.lock
 COPY --from=foreman-builder --chown=foreman:foreman ${HOME}/vendor/ruby ${HOME}/vendor/ruby
