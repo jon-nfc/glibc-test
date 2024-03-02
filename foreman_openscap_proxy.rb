@@ -1,7 +1,7 @@
 
 mkdir -p /usr/local/bundle/bundler.d
 
-cat <<'EOF' > /usr/local/bundle/bundler.d/openscap.rb
+
 
 
 
@@ -17,14 +17,18 @@ bundle install
 gem build
 
 
+
+git clone --depth=1 --branch 3.9.1 https://github.com/theforeman/smart-proxy.git
+
+
+
 dockerfile
 
 copy --from=build smart_proxy_openscap-0.9.2.gem
 
 
+cat <<'EOF' > bundler.d/openscap.rb
 
-# gem 'openscap_parser'
-
-# gem 'smart_proxy_openscap', :git => "https://github.com/theforeman/smart_proxy_openscap.git", :branch => 'v0.9.2'
+gem 'smart_proxy_openscap', :git => "https://github.com/theforeman/smart_proxy_openscap.git", :branch => 'v0.9.2'
 
 EOF

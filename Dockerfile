@@ -3,8 +3,8 @@
 
 FROM quay.io/centos/centos:stream9 as base
 
-ARG RUBY_VERSION="2.7"
-ARG NODEJS_VERSION="14"
+ARG RUBY_VERSION="3.3"
+ARG NODEJS_VERSION="20"
 ENV FOREMAN_FQDN=foreman.example.com
 ENV FOREMAN_DOMAIN=example.com
 
