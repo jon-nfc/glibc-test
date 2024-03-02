@@ -55,9 +55,9 @@ COPY --chown=foreman . ${HOME}/
 RUN ls -la;
 
 
-RUN mkdir -p .bundle; \
-  echo "---" > .bundle/config; \
-  echo '"BUNDLE_PATH: "vendor/bundle"' > .bundle/config;
+# RUN mkdir -p .bundle; \
+#   echo "---" > .bundle/config; \
+#   echo '"BUNDLE_PATH: "vendor/bundle"' > .bundle/config;
 
 
 RUN ls -la; bundle config set --local path vendor
