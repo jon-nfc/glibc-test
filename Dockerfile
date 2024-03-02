@@ -34,7 +34,7 @@ RUN apk add --update bash git gcc cmake libc-dev build-base \
 
 ENV RAILS_ENV production
 ENV FOREMAN_APIPIE_LANGS en
-ENV BUNDLER_SKIPPED_GROUPS "test development openid libvirt journald facter"
+ENV BUNDLER_SKIPPED_GROUPS "test development openid libvirt journald facter console"
 ENV DATABASE_URL=sqlite3:tmp/bootstrap-db.sql
 ENV BUNDLE_APP_CONFIG=''
 ARG HOME=/home/foreman
@@ -42,21 +42,61 @@ USER foreman
 WORKDIR $HOME
 COPY --chown=foreman . ${HOME}/
 
-# Adding missing gems, for tzdata see https://bugzilla.redhat.com/show_bug.cgi?id=1611117
-RUN echo gem '"rdoc"' > bundler.d/container.rb && echo gem '"tzinfo-data"' >> bundler.d/container.rb
-RUN bundle install --without "${BUNDLER_SKIPPED_GROUPS}" \
-    --binstubs --clean --path vendor --jobs=5 --retry=3 && \
+
+
+
+RUN bundle config set --local without "${BUNDLER_SKIPPED_GROUPS}" && \
+  bundle config set --local clean true && \
+  bundle config set --local path vendor && \
+  bundle config set --local jobs 5 && \
+  bundle config set --local retry 3
+
+
+RUN bundle install && \
+  bundle binstubs --all && \
   rm -rf vendor/ruby/*/cache/*.gem && \
   find vendor/ruby/*/gems -name "*.c" -delete && \
   find vendor/ruby/*/gems -name "*.o" -delete
-RUN npm install --no-optional
+
+
 RUN \
   make -C locale all-mo && \
-  bundle exec rake assets:clean assets:precompile db:migrate &&  \
-  bundle exec rake db:seed apipie:cache:index && rm -f tmp/bootstrap-db.sql
-RUN ./node_modules/webpack/bin/webpack.js --config config/webpack.config.js \
-  && npm run analyze && rm -rf public/webpack/stats.json
-RUN rm -rf vendor/ruby/*/cache vendor/ruby/*/gems/*/node_modules
+  mv -v db/schema.rb.nulldb db/schema.rb && \
+  bundle exec rake assets:clean assets:precompile
+
+
+RUN npm install --no-audit --no-optional && \
+  ./node_modules/webpack/bin/webpack.js --config config/webpack.config.js && \
+# cleanups
+  rm -rf public/webpack/stats.json ./node_modules vendor/ruby/*/cache vendor/ruby/*/gems/*/node_modules bundler.d/nulldb.rb db/schema.rb && \
+  bundle config without "${BUNDLER_SKIPPED_GROUPS} assets" && \
+  bundle install
+
+
+
+
+
+# Adding missing gems, for tzdata see https://bugzilla.redhat.com/show_bug.cgi?id=1611117
+# RUN echo gem '"rdoc"' > bundler.d/container.rb && echo gem '"tzinfo-data"' >> bundler.d/container.rb
+
+
+# RUN bundle install --without "${BUNDLER_SKIPPED_GROUPS}" \
+#     --binstubs --clean --path vendor --jobs=5 --retry=3 && \
+#   rm -rf vendor/ruby/*/cache/*.gem && \
+#   find vendor/ruby/*/gems -name "*.c" -delete && \
+#   find vendor/ruby/*/gems -name "*.o" -delete
+
+# RUN npm install --no-optional
+
+# RUN \
+#   make -C locale all-mo && \
+#   bundle exec rake assets:clean assets:precompile db:migrate &&  \
+#   bundle exec rake db:seed apipie:cache:index && rm -f tmp/bootstrap-db.sql
+
+# RUN ./node_modules/webpack/bin/webpack.js --config config/webpack.config.js \
+#   && npm run analyze && rm -rf public/webpack/stats.json
+
+# RUN rm -rf vendor/ruby/*/cache vendor/ruby/*/gems/*/node_modules
 
 FROM foreman-base-ruby
 
@@ -74,7 +114,8 @@ COPY --from=foreman-builder --chown=foreman:foreman ${HOME}/.bundle/config ${HOM
 COPY --from=foreman-builder --chown=foreman:foreman ${HOME}/Gemfile.lock ${HOME}/Gemfile.lock
 COPY --from=foreman-builder --chown=foreman:foreman ${HOME}/vendor/ruby ${HOME}/vendor/ruby
 COPY --from=foreman-builder --chown=foreman:foreman ${HOME}/public ${HOME}/public
-RUN echo gem '"rdoc"' > bundler.d/container.rb && echo gem '"tzinfo-data"' >> bundler.d/container.rb
+
+# RUN echo gem '"rdoc"' > bundler.d/container.rb && echo gem '"tzinfo-data"' >> bundler.d/container.rb
 
 RUN date -u > BUILD_TIME
 
