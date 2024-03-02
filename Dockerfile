@@ -33,9 +33,9 @@ RUN adduser --home $HOME --system --shell /bin/false --ingroup foreman --gecos F
 
 # Add a script to be executed every time the container starts.
 # COPY extras/containers/entrypoint.sh /usr/bin/
-RUN cp extras/containers/entrypoint.sh /usr/bin/; chmod +x /usr/bin/entrypoint.sh
+# RUN cp extras/containers/entrypoint.sh /usr/bin/; chmod +x /usr/bin/entrypoint.sh
 
-ENTRYPOINT ["entrypoint.sh"]
+# ENTRYPOINT ["entrypoint.sh"]
 
 
 
@@ -153,6 +153,11 @@ COPY --from=foreman-builder --chown=foreman:foreman ${HOME}/public ${HOME}/publi
 # RUN echo gem '"rdoc"' > bundler.d/container.rb && echo gem '"tzinfo-data"' >> bundler.d/container.rb
 
 RUN date -u > BUILD_TIME
+
+RUN cp extras/containers/entrypoint.sh /usr/bin/; chmod +x /usr/bin/entrypoint.sh
+
+ENTRYPOINT ["entrypoint.sh"]
+
 
 # Start the main process.
 CMD "bundle exec bin/rails server"
