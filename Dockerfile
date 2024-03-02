@@ -100,7 +100,7 @@ RUN \
   # SoF Custom
   dnf install -y zlib-devel xz patch; \
   # gem install nokogiri --platform=ruby; \
-  export LD_LIBRARY_PATH=/usr/local/glibc-2.29; \
+  export LD_LIBRARY_PATH=/usr/local/glibc-2.29/lib; \
   #dnf install -y rubygem-nokogiri; \
   # EoF Custom
   bundle install
