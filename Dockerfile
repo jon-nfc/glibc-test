@@ -4,9 +4,13 @@ FROM ruby:2.7-alpine3.16 as foreman-base-ruby
 
 
 
-RUN apk add -U tzdata gettext bash postgresql mysql-client npm netcat-openbsd \
-     && cp /usr/share/zoneinfo/Europe/Berlin /etc/localtime \
-     && apk del tzdata \
+RUN apk add -U \
+  # tzdata \
+  gettext bash postgresql \
+  # mysql-client \
+  npm netcat-openbsd \
+    #  && cp /usr/share/zoneinfo/Europe/Berlin /etc/localtime \
+    #  && apk del tzdata \
      && rm -rf /var/cache/apk/*
 
 ENV FOREMAN_FQDN docker-swarm-01.kstm.lab.net
@@ -87,7 +91,7 @@ RUN \
   bundle exec rake assets:clean assets:precompile
 
 
-RUN npm install --no-audit --no-optional && \
+RUN npm install --no-audit --no-optional --legacy-peer-deps && \
   ./node_modules/webpack/bin/webpack.js --config config/webpack.config.js && \
 # cleanups
   rm -rf public/webpack/stats.json ./node_modules vendor/ruby/*/cache vendor/ruby/*/gems/*/node_modules bundler.d/nulldb.rb db/schema.rb && \

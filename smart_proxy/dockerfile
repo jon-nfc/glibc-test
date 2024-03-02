@@ -9,6 +9,8 @@ RUN mkdir -p ${HOME}
 
 WORKDIR ${HOME}
 
+RUN ls -la /home/foreman
+
 RUN bundle config set --local without "${BUNDLER_SKIPPED_GROUPS}"; \
   bundle config set --local clean true; \
   bundle config set --local path vendor; \
@@ -18,10 +20,12 @@ RUN bundle config set --local without "${BUNDLER_SKIPPED_GROUPS}"; \
 
 
 
-ENV BUNDLE_APP_CONFIG='/home/foreman/.bundler'
+RUN ls -la /root
+
+ENV BUNDLE_APP_CONFIG='/home/foreman/.bundler/config'
 ENV GEM_HOME "${HOME}/vendor/ruby/2.7.0"
 
-
+RUN bundle config list
 # ENV GEM_HOME "${HOME}/vendor/ruby/2.7.0"
 # ENV BUNDLE_APP_CONFIG=''
 
@@ -86,7 +90,7 @@ RUN echo $PWD
 
 RUN ls -la; cat .bundle/config
 
-# RUN bundle config list
+RUN bundle config list
 
 # RUN bundle --path=vendor; ls -la; ls -la .bundle/
 
