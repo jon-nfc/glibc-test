@@ -29,6 +29,14 @@ rm bundler.d/journald.rb
 
 bundle install --with development
 
+gem install syslog
+
+cat <<'EOF' > bundler.d/syslog.rb
+
+gem 'syslog'
+
+EOF
+
 # to run
 bundle exec ruby bin/smart-proxy
 

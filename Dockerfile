@@ -95,9 +95,9 @@ RUN \
   # EoF Custom \
   bundle exec rake assets:clean assets:precompile
 
-# --legacy-peer-deps or force
+# --legacy-peer-deps or --force
 # RUN npm install --no-audit --no-optional && \
-RUN npm install --no-audit --omit=optional --legacy-peer-deps && \
+RUN npm install --no-audit --omit=optional --force && \
   ./node_modules/webpack/bin/webpack.js --config config/webpack.config.js && \
 # cleanups
   rm -rf public/webpack/stats.json ./node_modules vendor/ruby/*/cache vendor/ruby/*/gems/*/node_modules bundler.d/nulldb.rb db/schema.rb && \
