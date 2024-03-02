@@ -18,12 +18,12 @@ RUN bundle config set --local without "${BUNDLER_SKIPPED_GROUPS}"; \
 
 
 
-ENV BUNDLE_APP_CONFIG=''
-
+ENV BUNDLE_APP_CONFIG='/home/foreman/.bundler'
+ENV GEM_HOME "${HOME}/vendor/ruby/2.7.0"
 
 
 # ENV GEM_HOME "${HOME}/vendor/ruby/2.7.0"
-ENV BUNDLE_APP_CONFIG=''
+# ENV BUNDLE_APP_CONFIG=''
 
 RUN gem install rake bundler:2.4.22;
 
@@ -38,7 +38,7 @@ FROM base as builder
 ARG HOME=/home/foreman
 
 # ENV GEM_HOME "${HOME}/vendor/ruby/2.7.0"
-ENV BUNDLE_APP_CONFIG=''
+# ENV BUNDLE_APP_CONFIG=''
 
 
 RUN apk add \
@@ -97,7 +97,7 @@ RUN ls -la; cat .bundle/config
 #   bundle config set --local retry 3; \
 #   ls -la;
 
-ENV BUNDLE_APP_CONFIG='${home}/vendor/bundle'
+# ENV BUNDLE_APP_CONFIG='${HOME}/vendor/bundle'
 
 # RUN gem install rkerberos; \
 RUN cd ${HOME}; \
@@ -127,11 +127,11 @@ RUN echo "1"; ls -la ${HOME}; ls -laR ${HOME}/.bundle
 FROM base
 
 # ENV GEM_HOME ""
-ENV BUNDLE_APP_CONFIG=''
+# ENV BUNDLE_APP_CONFIG=''
 
 ARG HOME=/home/foreman
 
-ENV GEM_HOME "${HOME}/vendor/ruby/2.7.0"
+# ENV GEM_HOME "${HOME}/vendor/ruby/2.7.0"
 
 ENV RAILS_ENV=production
 
