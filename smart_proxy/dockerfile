@@ -9,6 +9,7 @@ RUN mkdir -p ${HOME}
 
 WORKDIR ${HOME}
 
+ENV GEM_HOME "${HOME}/vendor/ruby/2.7.0"
 
 RUN gem install rake bundler:2.4.22;
 
@@ -22,6 +23,9 @@ FROM base as builder
 
 ARG HOME=/home/foreman
 
+ENV GEM_HOME "${HOME}/vendor/ruby/2.7.0"
+# ENV BUNDLE_APP_CONFIG ""
+
 RUN apk add \
     alpine-sdk \
     libffi-dev \
@@ -29,16 +33,17 @@ RUN apk add \
     ruby-rake \
     git; \
   git clone --depth=1 --branch 3.9.1 https://github.com/theforeman/smart-proxy.git /tmp/app; \
+  rm \
+    /tmp/app/bundler.d/libvirt.rb \
+    /tmp/app/bundler.d/krb5.rb \
+    /tmp/app/bundler.d/realm_freeipa.rb \
+    /tmp/app/bundler.d/windows.rb \
+    /tmp/app/bundler.d/bmc.rb \
+    /tmp/app/bundler.d/journald.rb; \
   rm -rf /tmp/app/.git; \
   cp -r /tmp/app/* ${HOME}/; \
-  cd ${HOME}; \
-  rm \
-    bundler.d/libvirt.rb \
-    bundler.d/krb5.rb \
-    bundler.d/realm_freeipa.rb \
-    bundler.d/windows.rb \
-    bundler.d/bmc.rb \
-    bundler.d/journald.rb;
+  cd ${HOME}; 
+
 
 
 COPY foreman_openscap_proxy.rb ${HOME}/bundler.d/
@@ -59,7 +64,8 @@ RUN bundle config set --local without "${BUNDLER_SKIPPED_GROUPS}"; \
 
 WORKDIR ${HOME}
 
-RUN gem install rkerberos; \
+# RUN gem install rkerberos; \
+RUN cd ${HOME}; \
   bundle install; \
   bundle binstubs --all; \
   rm -rf vendor/ruby/*/cache/*.gem; \
@@ -69,12 +75,12 @@ RUN gem install rkerberos; \
 # RUN bundle exec rake assets:clean assets:precompile;
 
 
-RUN rm -rf vendor/ruby/*/cache vendor/ruby/*/gems/*/node_modules bundler.d/nulldb.rb db/schema.rb; \
+RUN cd ${HOME}; rm -rf vendor/ruby/*/cache vendor/ruby/*/gems/*/node_modules bundler.d/nulldb.rb db/schema.rb; \
   bundle config without "${BUNDLER_SKIPPED_GROUPS} assets"; \
   bundle install
 
 
-RUN ls -l ${HOME}
+RUN echo ""; ls -la ${HOME}
 
 
 ##########################################################################
@@ -84,7 +90,11 @@ RUN ls -l ${HOME}
 ##########################################################################
 FROM base
 
+# ENV GEM_HOME ""
+
 ARG HOME=/home/foreman
+
+ENV GEM_HOME "${HOME}/vendor/ruby/2.7.0"
 
 ENV RAILS_ENV=production
 
@@ -106,7 +116,7 @@ COPY --from=builder ${HOME}/vendor/ruby ${HOME}/vendor/ruby
 
 # COPY --from=builder ${HOME}/public ${HOME}/public
 
-RUN gem install rkerberos;
+# RUN gem install rkerberos;
 
 CMD bundle exec bin/smart-proxy
 

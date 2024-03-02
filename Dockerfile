@@ -1,21 +1,178 @@
 # Base container that is used for both building and running the app
-FROM registry.gitlab.com/nofusscomputing/infrastructure/configuration-management/foreman/glibc:2.29-ruby3 as base
+# ref: https://github.com/ohadlevy/foreman/blob/8995cba7c7c6f95e4f3ef55bee435254f2e8cc24/Dockerfile
+FROM ruby:2.7-alpine3.16 as foreman-base-ruby
 
-# FROM quay.io/centos/centos:stream8 as base
 
-# 3.3
-# ARG RUBY_VERSION="3.1"
-# ARG NODEJS_VERSION="20"
 
-#ARG RUBY_VERSION="2.7"
-ARG RUBY_VERSION="3.0"
-ARG NODEJS_VERSION="14"
-ENV FOREMAN_FQDN=foreman.example.com
-ENV FOREMAN_DOMAIN=example.com
+RUN apk add -U tzdata gettext bash postgresql mysql-client npm netcat-openbsd \
+     && cp /usr/share/zoneinfo/Europe/Berlin /etc/localtime \
+     && apk del tzdata \
+     && rm -rf /var/cache/apk/*
 
-ENV LD_LIBRARY_PATH ""
+ENV FOREMAN_FQDN docker-swarm-01.kstm.lab.net
+ENV FOREMAN_DOMAIN kstm.lab.net
+ENV BUNDLE_APP_CONFIG=''
 
-RUN gem install nokogiri:1.14.5 --platform=ruby
+ARG HOME=/home/foreman
+WORKDIR $HOME
+RUN addgroup --system foreman
+RUN adduser --home $HOME --system --shell /bin/false --ingroup foreman --gecos Foreman foreman
+
+# Add a script to be executed every time the container starts.
+COPY entrypoint.sh /usr/bin/
+RUN chmod +x /usr/bin/entrypoint.sh
+ENTRYPOINT ["entrypoint.sh"]
+
+
+
+FROM foreman-base-ruby as foreman-builder
+RUN apk add --update bash git gcc cmake libc-dev build-base \
+                         curl-dev libxml2-dev gettext \
+                         sqlite-dev npm \
+     && rm -rf /var/cache/apk/*
+
+
+ENV RAILS_ENV production
+ENV FOREMAN_APIPIE_LANGS en
+ENV BUNDLER_SKIPPED_GROUPS "test development openid libvirt journald facter"
+ENV DATABASE_URL=sqlite3:tmp/bootstrap-db.sql
+ENV BUNDLE_APP_CONFIG=''
+ARG HOME=/home/foreman
+USER foreman
+WORKDIR $HOME
+COPY --chown=foreman . ${HOME}/
+
+# Adding missing gems, for tzdata see https://bugzilla.redhat.com/show_bug.cgi?id=1611117
+RUN echo gem '"rdoc"' > bundler.d/container.rb && echo gem '"tzinfo-data"' >> bundler.d/container.rb
+RUN bundle install --without "${BUNDLER_SKIPPED_GROUPS}" \
+    --binstubs --clean --path vendor --jobs=5 --retry=3 && \
+  rm -rf vendor/ruby/*/cache/*.gem && \
+  find vendor/ruby/*/gems -name "*.c" -delete && \
+  find vendor/ruby/*/gems -name "*.o" -delete
+RUN npm install --no-optional
+RUN \
+  make -C locale all-mo && \
+  bundle exec rake assets:clean assets:precompile db:migrate &&  \
+  bundle exec rake db:seed apipie:cache:index && rm -f tmp/bootstrap-db.sql
+RUN ./node_modules/webpack/bin/webpack.js --config config/webpack.config.js \
+  && npm run analyze && rm -rf public/webpack/stats.json
+RUN rm -rf vendor/ruby/*/cache vendor/ruby/*/gems/*/node_modules
+
+FROM foreman-base-ruby
+
+ARG HOME=/home/foreman
+ARG RAILS_ENV=production
+ENV RAILS_SERVE_STATIC_FILES=true
+ENV RAILS_LOG_TO_STDOUT=true
+ENV BUNDLE_APP_CONFIG=''
+
+USER foreman
+WORKDIR ${HOME}
+COPY --chown=foreman . ${HOME}/
+COPY --from=foreman-builder /usr/bin/entrypoint.sh /usr/bin/entrypoint.sh
+COPY --from=foreman-builder --chown=foreman:foreman ${HOME}/.bundle/config ${HOME}/.bundle/config
+COPY --from=foreman-builder --chown=foreman:foreman ${HOME}/Gemfile.lock ${HOME}/Gemfile.lock
+COPY --from=foreman-builder --chown=foreman:foreman ${HOME}/vendor/ruby ${HOME}/vendor/ruby
+COPY --from=foreman-builder --chown=foreman:foreman ${HOME}/public ${HOME}/public
+RUN echo gem '"rdoc"' > bundler.d/container.rb && echo gem '"tzinfo-data"' >> bundler.d/container.rb
+
+RUN date -u > BUILD_TIME
+
+# Start the main process.
+CMD "bundle exec bin/rails server"
+
+EXPOSE 3000/tcp
+EXPOSE 5910-5930/tcp
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# ARG HOME=/home/foreman
+
+
+# RUN mkdir -p ${HOME}
+
+# WORKDIR ${HOME}
+
+# ENV GEM_HOME "${HOME}/vendor/ruby/2.7.0"
+
+# RUN apk add --no-cache \
+#     nodejs \
+#     npm; \
+#   gem install rake bundler:2.4.22;
+
+
+
+
+
+# ##########################################################################
+# #
+# #    Builder
+# #
+# ##########################################################################
+# FROM base as builder
+
+# ENV RAILS_ENV=production
+# ENV FOREMAN_APIPIE_LANGS=en
+# ENV BUNDLER_SKIPPED_GROUPS="test development openid libvirt journald facter console"
+# ENV DATABASE_URL=nulldb://nohost
+
+
+# ARG HOME=/home/foreman
+
+# RUN apk add \
+#     alpine-sdk \
+#     libffi-dev \
+#     ruby-dev \
+#     ruby-rake \
+#     git \
+#     postgresql12-dev \
+#   git clone --depth=1 --branch 3.9.1 https://github.com/theforeman/foreman.git /tmp/app; \
+#   rm -rf /tmp/app/.git; \
+#   cp -r /tmp/app/* ${HOME}/; \
+#   cd ${HOME}; 
+
+
+# COPY extras/containers/entrypoint.sh /usr/bin/
+
+# RUN chmod +x /usr/bin/entrypoint.sh
+
+# ENTRYPOINT ["entrypoint.sh"]
+
+
+
+
+
+# ############################################################33
+# # OLD
+
+
+
+# ARG RUBY_VERSION="2.7"
+# ARG NODEJS_VERSION="14"
+# ENV FOREMAN_FQDN=foreman.example.com
+# ENV FOREMAN_DOMAIN=example.com
 
 # RUN \
 #   dnf upgrade -y && \
@@ -23,32 +180,27 @@ RUN gem install nokogiri:1.14.5 --platform=ruby
 #   dnf install -y postgresql-libs ruby{,gems} rubygem-{rake,bundler} npm nc hostname && \
 #   dnf clean all
 
+# ARG HOME=/home/foreman
+# WORKDIR $HOME
+# RUN groupadd -r foreman -f -g 0 && \
+#     useradd -u 1001 -r -g foreman -d $HOME -s /sbin/nologin \
+#     -c "Foreman Application User" foreman && \
+#     chown -R 1001:0 $HOME && \
+#     chmod -R g=u ${HOME}
+
+# # Add a script to be executed every time the container starts.
+# COPY extras/containers/entrypoint.sh /usr/bin/
+# RUN chmod +x /usr/bin/entrypoint.sh
+# ENTRYPOINT ["entrypoint.sh"]
 
 
-ARG HOME=/home/foreman
-WORKDIR $HOME
-
-RUN groupadd -r foreman -f -g 0 && \
-    useradd -u 1001 -r -g foreman -d $HOME -s /sbin/nologin \
-    -c "Foreman Application User" foreman && \
-    chown -R 1001:0 $HOME && \
-    chmod -R g=u ${HOME}
 
 
-COPY extras/containers/entrypoint.sh /usr/bin/
-
-RUN export;
-
-# Add a script to be executed every time the container starts.
-
-RUN chmod +x /usr/bin/entrypoint.sh
-ENTRYPOINT ["entrypoint.sh"]
-
-# Temp container that download gems/npms and compile assets etc
-FROM base as builder
-ENV RAILS_ENV=production
-ENV FOREMAN_APIPIE_LANGS=en
-ENV BUNDLER_SKIPPED_GROUPS="test development openid libvirt journald facter console"
+# # Temp container that download gems/npms and compile assets etc
+# FROM base as builder
+# ENV RAILS_ENV=production
+# ENV FOREMAN_APIPIE_LANGS=en
+# ENV BUNDLER_SKIPPED_GROUPS="test development openid libvirt journald facter console"
 
 # RUN \
 #   dnf install -y redhat-rpm-config git-core \
@@ -57,116 +209,61 @@ ENV BUNDLER_SKIPPED_GROUPS="test development openid libvirt journald facter cons
 #     postgresql-devel && \
 #   dnf clean all
 
-# RUN dnf install -y zlib-devel xz patch;
+# ENV DATABASE_URL=nulldb://nohost
 
-
-# RUN export LD_LIBRARY_PATH=/usr/local/glibc-2.29/lib; \
-#   gem install nokogiri --platform=ruby; \
-#   export LD_LIBRARY_PATH="";
-
-
-# # SoF Custom
-# # https://thelinuxcluster.com/2023/06/30/compiling-glibc-2-29-at-centos-7/
+# ARG HOME=/home/foreman
+# USER 1001
+# WORKDIR $HOME
+# COPY --chown=1001:0 . ${HOME}/
+# RUN bundle config set --local without "${BUNDLER_SKIPPED_GROUPS}" && \
+#   bundle config set --local clean true && \
+#   bundle config set --local path vendor && \
+#   bundle config set --local jobs 5 && \
+#   bundle config set --local retry 3
+# RUN bundle install && \
+#   bundle binstubs --all && \
+#   rm -rf vendor/ruby/*/cache/*.gem && \
+#   find vendor/ruby/*/gems -name "*.c" -delete && \
+#   find vendor/ruby/*/gems -name "*.o" -delete
 # RUN \
-#   dnf install -y wget bison python3.11; \
-#   which glibc; \
-#   wget -4c https://ftp.gnu.org/gnu/glibc/glibc-2.29.tar.gz; \
-#   tar -zxvf glibc-2.29.tar.gz; \
-#   cd glibc-2.29; \
-#   mkdir build_dir; \
-#   cd build_dir; \
-#   # ../configure --prefix=/opt/glibc; \
-#   ../configure --prefix=/usr/local/glibc-2.29; \
-#   #make -j8 | tee make.log; \
-#   #make install; \
-#   #ls -lR /usr/local/; \
-#   dnf clean all
+#   make -C locale all-mo && \
+#   mv -v db/schema.rb.nulldb db/schema.rb && \
+#   bundle exec rake assets:clean assets:precompile
 
-# # EoF Custom
-
-
-ENV DATABASE_URL=nulldb://nohost
-
-ARG HOME=/home/foreman
-USER 1001
-WORKDIR $HOME
-COPY --chown=1001:0 . ${HOME}/
-
-
-RUN rm -rf ${HOME}/test
-
-RUN bundle config set --local without "${BUNDLER_SKIPPED_GROUPS}" && \
-  bundle config set --local clean true && \
-  bundle config set --local path vendor && \
-  bundle config set --local jobs 5 && \
-  bundle config set --local retry 3
-
-
-#RUN \
-  # SoF Custom
-# RUN dnf install -y zlib-devel xz patch;
-  # gem install nokogiri --platform=ruby; \
-RUN gem install nokogiri:1.14.5 --platform=ruby
-  #dnf install -y rubygem-nokogiri; \
-  # EoF Custom
-RUN bundle install
-
-RUN bundle binstubs --all && \
-  rm -rf vendor/ruby/*/cache/*.gem && \
-  find vendor/ruby/*/gems -name "*.c" -delete && \
-  find vendor/ruby/*/gems -name "*.o" -delete
-
-# # SoF Custom
-# RUN gem install nokogiri --platform=ruby -v 1.15.5
-# # EoF Custom
-
-RUN \
-  # SoF custom \
-  # bundle config set force_ruby_platform true && \
-  # Eof Custom \
-  make -C locale all-mo && \
-  mv -v db/schema.rb.nulldb db/schema.rb && \
-  # SoF Custom \
-  # gem install nokogiri:1.15.5 --platform=ruby && \
-  # EoF Custom \
-  bundle exec rake assets:clean assets:precompile
-
-# --legacy-peer-deps or --force
 # RUN npm install --no-audit --no-optional && \
-RUN npm install --no-audit --omit=optional && \
-  ./node_modules/webpack/bin/webpack.js --config config/webpack.config.js && \
-# cleanups
-  rm -rf public/webpack/stats.json ./node_modules vendor/ruby/*/cache vendor/ruby/*/gems/*/node_modules bundler.d/nulldb.rb db/schema.rb && \
-  bundle config without "${BUNDLER_SKIPPED_GROUPS} assets" && \
-  bundle install
+#   ./node_modules/webpack/bin/webpack.js --config config/webpack.config.js && \
+# # cleanups
+#   rm -rf public/webpack/stats.json ./node_modules vendor/ruby/*/cache vendor/ruby/*/gems/*/node_modules bundler.d/nulldb.rb db/schema.rb && \
+#   bundle config without "${BUNDLER_SKIPPED_GROUPS} assets" && \
+#   bundle install
 
-USER 0
-RUN chgrp -R 0 ${HOME} && \
-    chmod -R g=u ${HOME}
+# # USER 0
+# # RUN chgrp -v -R 0 ${HOME} && \
+# #     chmod -v -R g=u ${HOME}
 
-USER 1001
+# # USER 1001
 
-FROM base
+# FROM base
 
-ARG HOME=/home/foreman
-ENV RAILS_ENV=production
-ENV RAILS_SERVE_STATIC_FILES=true
-ENV RAILS_LOG_TO_STDOUT=true
+# ARG HOME=/home/foreman
+# ENV RAILS_ENV=production
+# ENV RAILS_SERVE_STATIC_FILES=true
+# ENV RAILS_LOG_TO_STDOUT=true
 
-USER 1001
-WORKDIR ${HOME}
-COPY --chown=1001:0 . ${HOME}/
-COPY --from=builder /usr/bin/entrypoint.sh /usr/bin/entrypoint.sh
-COPY --from=builder --chown=1001:0 ${HOME}/.bundle/config ${HOME}/.bundle/config
-COPY --from=builder --chown=1001:0 ${HOME}/Gemfile.lock ${HOME}/Gemfile.lock
-COPY --from=builder --chown=1001:0 ${HOME}/vendor/ruby ${HOME}/vendor/ruby
-COPY --from=builder --chown=1001:0 ${HOME}/public ${HOME}/public
-RUN rm -rf bundler.d/nulldb.rb bin/spring
+# USER 1001
+# WORKDIR ${HOME}
+# COPY --chown=1001:0 . ${HOME}/
+# COPY --from=builder /usr/bin/entrypoint.sh /usr/bin/entrypoint.sh
+# COPY --from=builder --chown=1001:0 ${HOME}/.bundle/config ${HOME}/.bundle/config
+# COPY --from=builder --chown=1001:0 ${HOME}/Gemfile.lock ${HOME}/Gemfile.lock
+# COPY --from=builder --chown=1001:0 ${HOME}/vendor/ruby ${HOME}/vendor/ruby
+# COPY --from=builder --chown=1001:0 ${HOME}/public ${HOME}/public
+# RUN rm -rf bundler.d/nulldb.rb bin/spring
 
-RUN date -u > BUILD_TIME
+# RUN date -u > BUILD_TIME
 
-# Start the main process.
-CMD bundle exec bin/rails server
+# # Start the main process.
+# CMD bundle exec bin/rails server
 
-EXPOSE 3000/tcp
-EXPOSE 5910-5930/tcp
+# EXPOSE 3000/tcp
+# EXPOSE 5910-5930/tcp
