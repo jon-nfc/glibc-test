@@ -15,6 +15,12 @@ RUN \
   dnf install -y postgresql-libs ruby{,gems} rubygem-{rake,bundler} npm nc hostname && \
   dnf clean all
 
+RUN \
+  # SoF Custom
+  dnf install -y zlib-devel xz patch; \
+  gem install nokogiri --platform=ruby;
+
+
 ARG HOME=/home/foreman
 WORKDIR $HOME
 RUN groupadd -r foreman -f -g 0 && \
@@ -74,7 +80,13 @@ RUN bundle config set --local without "${BUNDLER_SKIPPED_GROUPS}" && \
   bundle config set --local path vendor && \
   bundle config set --local jobs 5 && \
   bundle config set --local retry 3
-RUN bundle install && \
+RUN \
+  # SoF Custom
+  dnf install -y zlib-devel xz patch; \
+  gem install nokogiri --platform=ruby; \
+  #dnf install -y rubygem-nokogiri; \
+  # EoF Custom
+  bundle install && \
   bundle binstubs --all && \
   rm -rf vendor/ruby/*/cache/*.gem && \
   find vendor/ruby/*/gems -name "*.c" -delete && \
