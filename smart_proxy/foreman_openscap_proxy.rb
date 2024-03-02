@@ -45,4 +45,7 @@
 
 gem 'smart_proxy_openscap', :git => "https://github.com/theforeman/smart_proxy_openscap.git", :branch => 'v0.9.2'
 
+gem 'smart_proxy_ipam', :git => "https://github.com/grizzthedj/smart_proxy_ipam.git", :branch => 'v0.0.13'
+
+
 # EOF

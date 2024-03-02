@@ -157,9 +157,9 @@ COPY Gemfile.local-amd64.rb ${HOME}/bundler.d/Gemfile.local.rb
 
 RUN date -u > BUILD_TIME
 
-RUN cp ${HOME}/extras/containers/entrypoint.sh /usr/bin/; 
+# RUN cp ${HOME}/extras/containers/entrypoint.sh /usr/bin/; 
 
-RUN chmod +x /usr/bin/entrypoint.sh
+# RUN chmod +x /usr/bin/entrypoint.sh
 
 ENTRYPOINT ["entrypoint.sh"]
 
