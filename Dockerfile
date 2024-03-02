@@ -32,8 +32,9 @@ RUN addgroup --system foreman
 RUN adduser --home $HOME --system --shell /bin/false --ingroup foreman --gecos Foreman foreman
 
 # Add a script to be executed every time the container starts.
-COPY extras/containers/entrypoint.sh /usr/bin/
-RUN chmod +x /usr/bin/entrypoint.sh
+# COPY extras/containers/entrypoint.sh /usr/bin/
+RUN cp extras/containers/entrypoint.sh /usr/bin/; chmod +x /usr/bin/entrypoint.sh
+
 ENTRYPOINT ["entrypoint.sh"]
 
 
