@@ -14,8 +14,7 @@ ENV FOREMAN_FQDN=foreman.example.com
 ENV FOREMAN_DOMAIN=example.com
 
 
-RUN export LD_LIBRARY_PATH=/usr/local/glibc-2.29/lib/; \
-  gem install nokogiri --platform=ruby
+RUN gem install nokogiri:1.14.5 --platform=ruby
 
 # RUN \
 #   dnf upgrade -y && \
