@@ -1,5 +1,5 @@
 # Base container that is used for both building and running the app
-FROM registry.gitlab.com/nofusscomputing/infrastructure/configuration-management/foreman/glibc:2.29 as base
+FROM registry.gitlab.com/nofusscomputing/infrastructure/configuration-management/foreman/glibc:2.29-ruby3 as base
 
 # FROM quay.io/centos/centos:stream8 as base
 
