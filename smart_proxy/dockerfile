@@ -20,6 +20,7 @@ RUN gem install rake bundler:2.4.22;
 ##########################################################################
 FROM base as builder
 
+ARG HOME=/home/foreman
 
 RUN apk add \
     alpine-sdk \
@@ -30,6 +31,7 @@ RUN apk add \
   git clone --depth=1 --branch 3.9.1 https://github.com/theforeman/smart-proxy.git /tmp/app; \
   rm -rf /tmp/app/.git; \
   cp -r /tmp/app/* ${HOME}/; \
+  cd ${HOME}; \
   rm \
     bundler.d/libvirt.rb \
     bundler.d/krb5.rb \
@@ -55,8 +57,10 @@ RUN bundle config set --local without "${BUNDLER_SKIPPED_GROUPS}"; \
   bundle config set --local jobs 5; \
   bundle config set --local retry 3
 
+WORKDIR ${HOME}
 
-RUN bundle install; \
+RUN gem install rkerberos; \
+  bundle install; \
   bundle binstubs --all; \
   rm -rf vendor/ruby/*/cache/*.gem; \
   find vendor/ruby/*/gems -name "*.c" -delete; \
@@ -70,6 +74,8 @@ RUN rm -rf vendor/ruby/*/cache vendor/ruby/*/gems/*/node_modules bundler.d/nulld
   bundle install
 
 
+RUN ls -l ${HOME}
+
 
 ##########################################################################
 #
@@ -78,23 +84,29 @@ RUN rm -rf vendor/ruby/*/cache vendor/ruby/*/gems/*/node_modules bundler.d/nulld
 ##########################################################################
 FROM base
 
+ARG HOME=/home/foreman
+
 ENV RAILS_ENV=production
 
 ENV RAILS_SERVE_STATIC_FILES=true
 
 ENV RAILS_LOG_TO_STDOUT=true
 
+WORKDIR ${HOME}
 
 COPY --from=builder /tmp/app/. ${HOME}/
 
-COPY --from=builder ${HOME}/bundle/config ${HOME}/bundle/config
+# RUN ls -l ${HOME}
+
+COPY --from=builder ${HOME}/config ${HOME}/config
 
 COPY --from=builder ${HOME}/Gemfile.lock ${HOME}/Gemfile.lock
 
 COPY --from=builder ${HOME}/vendor/ruby ${HOME}/vendor/ruby
 
-COPY --from=builder ${HOME}/public ${HOME}/public
+# COPY --from=builder ${HOME}/public ${HOME}/public
 
+RUN gem install rkerberos;
 
 CMD bundle exec bin/smart-proxy
 

@@ -13,6 +13,10 @@ ARG NODEJS_VERSION="14"
 ENV FOREMAN_FQDN=foreman.example.com
 ENV FOREMAN_DOMAIN=example.com
 
+
+RUN export LD_LIBRARY_PATH=/usr/local/glibc-2.29/lib/; \
+  gem install nokogiri --platform=ruby
+
 # RUN \
 #   dnf upgrade -y && \
 #   dnf module enable ruby:${RUBY_VERSION} nodejs:${NODEJS_VERSION} -y && \
@@ -102,7 +106,8 @@ RUN bundle config set --local without "${BUNDLER_SKIPPED_GROUPS}" && \
   # SoF Custom
 # RUN dnf install -y zlib-devel xz patch;
   # gem install nokogiri --platform=ruby; \
-#RUN export LD_LIBRARY_PATH=/usr/local/glibc-2.29/lib; \
+RUN export LD_LIBRARY_PATH=/usr/local/glibc-2.29/lib/; \
+  gem install nokogiri --platform=ruby
   #dnf install -y rubygem-nokogiri; \
   # EoF Custom
 RUN bundle install

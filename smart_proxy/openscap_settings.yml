@@ -1,5 +1,5 @@
 
-cat <<'EOF' > ${HOME}/config/settings.d/openscap.yml
+# cat <<'EOF' > ${HOME}/config/settings.d/openscap.yml
 ---
 :enabled: true
 
@@ -17,5 +17,5 @@ cat <<'EOF' > ${HOME}/config/settings.d/openscap.yml
 # So Foreman can request arf xml reports
 :reportsdir: /usr/share/foreman-proxy/openscap/content
 
-EOF
+# EOF
 
