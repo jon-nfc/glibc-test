@@ -28,9 +28,13 @@ WORKDIR $HOME
 #     -c "Foreman Application User" foreman && \
 #     chown -R 1001:0 $HOME && \
 #     chmod -R g=u ${HOME}
+COPY extras/containers/entrypoint.sh /usr/bin/
+
+RUN export; \
+  ls -l /usr/bin/entrypoint.sh;
 
 # Add a script to be executed every time the container starts.
-COPY extras/containers/entrypoint.sh /usr/bin/
+
 RUN chmod +x /usr/bin/entrypoint.sh
 ENTRYPOINT ["entrypoint.sh"]
 
