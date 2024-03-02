@@ -28,24 +28,31 @@ ENTRYPOINT ["entrypoint.sh"]
 FROM foreman-base-ruby as foreman-builder
 RUN apk add --update bash git gcc cmake libc-dev build-base \
                          curl-dev libxml2-dev gettext \
-                         sqlite-dev npm \
+                        #  sqlite-dev \
+                         npm \
      && rm -rf /var/cache/apk/*
 
 
 ENV RAILS_ENV production
 ENV FOREMAN_APIPIE_LANGS en
 ENV BUNDLER_SKIPPED_GROUPS "test development openid libvirt journald facter console"
-ENV DATABASE_URL=sqlite3:tmp/bootstrap-db.sql
+# ENV DATABASE_URL=sqlite3:tmp/bootstrap-db.sql
+ENV DATABASE_URL=nulldb://nohost
 ENV BUNDLE_APP_CONFIG=''
 ARG HOME=/home/foreman
 USER foreman
 WORKDIR $HOME
 COPY --chown=foreman . ${HOME}/
 
+RUN ls -la;
 
 
+RUN mkdir -p .bundle; \
+  echo "---" > .bundle/config; \
+  echo'"BUNDLE_PATH: "vendor/bundle"' > .bundle/config;
 
-RUN bundle config set --local path vendor
+
+RUN ls -la; bundle config set --local path vendor
 
 RUN bundle config set --local without "${BUNDLER_SKIPPED_GROUPS}"
 
