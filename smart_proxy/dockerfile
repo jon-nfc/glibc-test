@@ -116,11 +116,11 @@ RUN bundle binstubs --all; \
 
 
 RUN cd ${HOME}; rm -rf vendor/ruby/*/cache vendor/ruby/*/gems/*/node_modules bundler.d/nulldb.rb db/schema.rb; \
-  bundle config without "${BUNDLER_SKIPPED_GROUPS} assets"; \
+  # bundle config without "test development"; \
   bundle install
 
 
-RUN echo "1"; ls -la ${HOME}; ls -laR ${HOME}/.bundle
+# RUN echo "1"; ls -la ${HOME}; ls -laR ${HOME}/.bundle
 
 
 ##########################################################################

@@ -1,6 +1,6 @@
 # Base container that is used for both building and running the app
 # ref: https://github.com/ohadlevy/foreman/blob/8995cba7c7c6f95e4f3ef55bee435254f2e8cc24/Dockerfile
-FROM ruby:2.7-alpine3.16 as foreman-base-ruby
+FROM ruby:2.7-alpine3.14 as foreman-base-ruby
 
 
 
@@ -42,7 +42,8 @@ FROM foreman-base-ruby as foreman-builder
 RUN apk add --update bash git gcc cmake libc-dev build-base \
                          curl-dev libxml2-dev gettext \
                         #  sqlite-dev \
-                        postgresql12-dev \
+                        # postgresql12-dev \
+                        postgresql-dev \
                          npm \
      && rm -rf /var/cache/apk/*
 
