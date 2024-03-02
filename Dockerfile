@@ -100,7 +100,7 @@ RUN bundle config set --local without "${BUNDLER_SKIPPED_GROUPS}" && \
 
 #RUN \
   # SoF Custom
-RUN dnf install -y zlib-devel xz patch;
+# RUN dnf install -y zlib-devel xz patch;
   # gem install nokogiri --platform=ruby; \
 RUN export LD_LIBRARY_PATH=/usr/local/glibc-2.29/lib; \
   #dnf install -y rubygem-nokogiri; \
