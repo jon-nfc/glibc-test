@@ -154,7 +154,9 @@ COPY --from=foreman-builder --chown=foreman:foreman ${HOME}/public ${HOME}/publi
 
 RUN date -u > BUILD_TIME
 
-RUN cp extras/containers/entrypoint.sh /usr/bin/; chmod +x /usr/bin/entrypoint.sh
+RUN cp ${HOME}/extras/containers/entrypoint.sh /usr/bin/; 
+
+RUN chmod +x /usr/bin/entrypoint.sh
 
 ENTRYPOINT ["entrypoint.sh"]
 
