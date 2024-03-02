@@ -93,7 +93,7 @@ RUN \
 
 
 RUN npm install --no-audit --no-optional --legacy-peer-deps && \
-  ./node_modules/webpack/bin/webpack.js --config config/webpack.config.js && \
+  ./node_modules/webpack/bin/webpack.js --max-old-space-size=1500 --config config/webpack.config.js && \
 # cleanups
   rm -rf public/webpack/stats.json ./node_modules vendor/ruby/*/cache vendor/ruby/*/gems/*/node_modules bundler.d/nulldb.rb db/schema.rb && \
   bundle config without "${BUNDLER_SKIPPED_GROUPS} assets" && \
