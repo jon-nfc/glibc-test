@@ -13,6 +13,7 @@ ARG NODEJS_VERSION="14"
 ENV FOREMAN_FQDN=foreman.example.com
 ENV FOREMAN_DOMAIN=example.com
 
+ENV LD_LIBRARY_PATH ""
 
 RUN gem install nokogiri:1.14.5 --platform=ruby
 
@@ -22,7 +23,7 @@ RUN gem install nokogiri:1.14.5 --platform=ruby
 #   dnf install -y postgresql-libs ruby{,gems} rubygem-{rake,bundler} npm nc hostname && \
 #   dnf clean all
 
-ENV LD_LIBRARY_PATH ""
+
 
 ARG HOME=/home/foreman
 WORKDIR $HOME
