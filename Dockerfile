@@ -30,8 +30,7 @@ WORKDIR $HOME
 #     chmod -R g=u ${HOME}
 COPY extras/containers/entrypoint.sh /usr/bin/
 
-RUN export; \
-  ls -l /usr/bin/entrypoint.sh;
+RUN export;
 
 # Add a script to be executed every time the container starts.
 
