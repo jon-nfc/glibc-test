@@ -14,7 +14,12 @@ cd smart_proxy_openscap
 
 bundle install
 
+gem build
 
+
+dockerfile
+
+copy --from=build smart_proxy_openscap-0.9.2.gem
 
 
 

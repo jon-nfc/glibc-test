@@ -1,7 +1,7 @@
 # Base container that is used for both building and running the app
 # FROM registry.gitlab.com/nofusscomputing/infrastructure/configuration-management/foreman/glibc:2.29 as base
 
-FROM quay.io/repository/centos/centos:stream9 as base
+FROM quay.io/centos/centos:stream9 as base
 
 ARG RUBY_VERSION="2.7"
 ARG NODEJS_VERSION="14"
