@@ -23,11 +23,14 @@ ENV LD_LIBRARY_PATH ""
 
 ARG HOME=/home/foreman
 WORKDIR $HOME
-# RUN groupadd -r foreman -f -g 0 && \
-#     useradd -u 1001 -r -g foreman -d $HOME -s /sbin/nologin \
-#     -c "Foreman Application User" foreman && \
-#     chown -R 1001:0 $HOME && \
-#     chmod -R g=u ${HOME}
+
+RUN groupadd -r foreman -f -g 0 && \
+    useradd -u 1001 -r -g foreman -d $HOME -s /sbin/nologin \
+    -c "Foreman Application User" foreman && \
+    chown -R 1001:0 $HOME && \
+    chmod -R g=u ${HOME}
+
+
 COPY extras/containers/entrypoint.sh /usr/bin/
 
 RUN export;
