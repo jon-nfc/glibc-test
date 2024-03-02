@@ -1,13 +1,24 @@
 
 FROM ruby:2.7-alpine3.16 as base
 
-
 ARG HOME=/home/foreman
-ENV BUNDLE_APP_CONFIG=''
 
 RUN mkdir -p ${HOME}
 
 WORKDIR ${HOME}
+
+RUN bundle config set --local without "${BUNDLER_SKIPPED_GROUPS}"; \
+  bundle config set --local clean true; \
+  bundle config set --local path vendor; \
+  bundle config set --local jobs 5; \
+  bundle config set --local retry 3; \
+  ls -la ${HOME};
+
+
+
+ENV BUNDLE_APP_CONFIG=''
+
+
 
 # ENV GEM_HOME "${HOME}/vendor/ruby/2.7.0"
 ENV BUNDLE_APP_CONFIG=''

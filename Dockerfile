@@ -1,6 +1,6 @@
 # Base container that is used for both building and running the app
 # ref: https://github.com/ohadlevy/foreman/blob/8995cba7c7c6f95e4f3ef55bee435254f2e8cc24/Dockerfile
-FROM ruby:2.6-alpine as foreman-base-ruby
+FROM ruby:2.7-alpine3.16 as foreman-base-ruby
 
 
 
@@ -15,6 +15,14 @@ ENV BUNDLE_APP_CONFIG=''
 
 ARG HOME=/home/foreman
 WORKDIR $HOME
+
+RUN bundle config set --local without "${BUNDLER_SKIPPED_GROUPS}"; \
+  bundle config set --local clean true; \
+  bundle config set --local path vendor; \
+  bundle config set --local jobs 5; \
+  bundle config set --local retry 3; \
+  ls -la ${HOME};
+
 RUN addgroup --system foreman
 RUN adduser --home $HOME --system --shell /bin/false --ingroup foreman --gecos Foreman foreman
 
