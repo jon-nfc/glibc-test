@@ -93,10 +93,11 @@ RUN bundle install && \
   find vendor/ruby/*/gems -name "*.o" -delete
 
 
-RUN \
-  make -C locale all-mo && \
-  mv -v db/schema.rb.nulldb db/schema.rb && \
-  bundle exec rake assets:clean assets:precompile
+RUN make -C locale all-mo
+
+RUN mv -v db/schema.rb.nulldb db/schema.rb
+
+RUN bundle exec rake assets:clean assets:precompile
 
 
 RUN npm install --no-audit --no-optional --legacy-peer-deps && \
