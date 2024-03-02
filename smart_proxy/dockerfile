@@ -57,17 +57,30 @@ COPY openscap_settings.yml ${HOME}/config/settings.d/openscap.yml
 
 ENV BUNDLER_SKIPPED_GROUPS="test development openid libvirt journald facter console"
 
-RUN mkdir -p .bundle; \
-  echo "---" > .bundle/config; \
-  echo '"BUNDLE_PATH: "vendor/bundle"' > .bundle/config;
+# ENV GEM_HOME=
+# ENV BUNDLE_APP_CONFIG=
+WORKDIR ${HOME}
+
+RUN export GEM_HOME=; export BUNDLE_APP_CONFIG=
+# RUN ls -la; rm -rf .bundle; mkdir -p .bundle; \
+#   echo "---" > .bundle/config; \
+#   echo '"BUNDLE_PATH: "vendor"' > .bundle/config; \
+#   ls -la; ls -la .bundle/ 
+
+RUN export
+
+RUN bundle config list
+
+# RUN bundle --path=vendor; ls -la; ls -la .bundle/
 
 RUN bundle config set --local without "${BUNDLER_SKIPPED_GROUPS}"; \
   bundle config set --local clean true; \
   bundle config set --local path vendor; \
   bundle config set --local jobs 5; \
-  bundle config set --local retry 3
+  bundle config set --local retry 3; \
+  ls -la;
 
-WORKDIR ${HOME}
+
 
 # RUN gem install rkerberos; \
 RUN cd ${HOME}; \
