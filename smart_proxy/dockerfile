@@ -10,7 +10,7 @@ RUN mkdir -p ${HOME}
 WORKDIR ${HOME}
 
 
-RUN gem install rake bundler;
+RUN gem install rake bundler:2.4.22;
 
 
 ##########################################################################

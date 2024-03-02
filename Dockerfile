@@ -96,11 +96,13 @@ RUN bundle config set --local without "${BUNDLER_SKIPPED_GROUPS}" && \
   bundle config set --local path vendor && \
   bundle config set --local jobs 5 && \
   bundle config set --local retry 3
-RUN \
+
+
+#RUN \
   # SoF Custom
-  dnf install -y zlib-devel xz patch; \
+RUN dnf install -y zlib-devel xz patch;
   # gem install nokogiri --platform=ruby; \
-  export LD_LIBRARY_PATH=/usr/local/glibc-2.29/lib; \
+RUN export LD_LIBRARY_PATH=/usr/local/glibc-2.29/lib; \
   #dnf install -y rubygem-nokogiri; \
   # EoF Custom
   bundle install
