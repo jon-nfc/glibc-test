@@ -87,6 +87,10 @@ ARG HOME=/home/foreman
 USER 1001
 WORKDIR $HOME
 COPY --chown=1001:0 . ${HOME}/
+
+
+RUN rm -rf ${HOME}/test
+
 RUN bundle config set --local without "${BUNDLER_SKIPPED_GROUPS}" && \
   bundle config set --local clean true && \
   bundle config set --local path vendor && \
