@@ -172,7 +172,7 @@ glibc 2.29:
     NO_COMMAND: adsa
     DOCKER_DOCKERFILE: Dockerfile-glibc
     DOCKER_IMAGE_BUILD_NAME: 'glibc'
-    DOCKER_IMAGE_BUILD_TAG: '2.29'
+    DOCKER_IMAGE_BUILD_TAG: '2.29-ruby3'
     DOCKER_IMAGE_BUILD_TARGET_PLATFORMS: "linux/amd64,linux/arm64"
   rules:
     - if:
