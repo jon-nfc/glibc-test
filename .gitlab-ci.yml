@@ -190,6 +190,7 @@ Build foreman:
       when: always
     - when: never
 
+
 Foreman default:
   extends: .build_docker_container
   needs: []
@@ -198,7 +199,7 @@ Foreman default:
     DOCKER_DOCKERFILE: Dockerfile
     DOCKER_IMAGE_BUILD_NAME: 'foreman-amd64'
     # DOCKER_IMAGE_BUILD_TAG: 'default'
-    DOCKER_IMAGE_BUILD_TARGET_PLATFORMS: "linux/amd64,linux/arm64"
+    DOCKER_IMAGE_BUILD_TARGET_PLATFORMS: "linux/amd64"
   rules:
     - if:
         $CI_COMMIT_BRANCH != ''
