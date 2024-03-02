@@ -1,7 +1,9 @@
+cat <<'EOF' > ${HOME}/config/settings.yml
+
 ---
  
 :log_file: /var/log/foreman-proxy.log      
-:log_level:
+:log_level: INFO
  
 :log_buffer: 2000
 :log_buffer_errors: 1000
@@ -9,17 +11,19 @@
 :bind_host: ['*']
  
 :http_port: 8000  
-# ^S:https_port: 8443
+# :https_port: 8443
  
 # :ssl_certificate: ssl/certs/fqdn.pem
 # :ssl_ca_file: ssl/certs/ca.pem
 # :ssl_private_key: ssl/private_keys/fqdn.key
                  
-:trusted_hosts:  
-  - foreman.local
+# :trusted_hosts:  
+#   - foreman.local
                  
-:foreman_url: https://foreman.example.com
+:foreman_url: https://example.com
  
-:foreman_ssl_ca: /etc/foreman-proxy/ssl/certs/ca.pem
-:foreman_ssl_cert: /etc/foreman-proxy/ssl/certs/fqdn.pem
-:foreman_ssl_key: /etc/foreman-proxy/ssl/private_keys/fqdn.pem
+# :foreman_ssl_ca: /etc/foreman-proxy/ssl/certs/ca.pem
+# :foreman_ssl_cert: /etc/foreman-proxy/ssl/certs/fqdn.pem
+# :foreman_ssl_key: /etc/foreman-proxy/ssl/private_keys/fqdn.pem
+
+EOF

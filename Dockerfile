@@ -13,21 +13,21 @@ ARG NODEJS_VERSION="14"
 ENV FOREMAN_FQDN=foreman.example.com
 ENV FOREMAN_DOMAIN=example.com
 
-RUN \
-  dnf upgrade -y && \
-  dnf module enable ruby:${RUBY_VERSION} nodejs:${NODEJS_VERSION} -y && \
-  dnf install -y postgresql-libs ruby{,gems} rubygem-{rake,bundler} npm nc hostname && \
-  dnf clean all
+# RUN \
+#   dnf upgrade -y && \
+#   dnf module enable ruby:${RUBY_VERSION} nodejs:${NODEJS_VERSION} -y && \
+#   dnf install -y postgresql-libs ruby{,gems} rubygem-{rake,bundler} npm nc hostname && \
+#   dnf clean all
 
 
 
 ARG HOME=/home/foreman
 WORKDIR $HOME
-RUN groupadd -r foreman -f -g 0 && \
-    useradd -u 1001 -r -g foreman -d $HOME -s /sbin/nologin \
-    -c "Foreman Application User" foreman && \
-    chown -R 1001:0 $HOME && \
-    chmod -R g=u ${HOME}
+# RUN groupadd -r foreman -f -g 0 && \
+#     useradd -u 1001 -r -g foreman -d $HOME -s /sbin/nologin \
+#     -c "Foreman Application User" foreman && \
+#     chown -R 1001:0 $HOME && \
+#     chmod -R g=u ${HOME}
 
 # Add a script to be executed every time the container starts.
 COPY extras/containers/entrypoint.sh /usr/bin/
@@ -40,12 +40,12 @@ ENV RAILS_ENV=production
 ENV FOREMAN_APIPIE_LANGS=en
 ENV BUNDLER_SKIPPED_GROUPS="test development openid libvirt journald facter console"
 
-RUN \
-  dnf install -y redhat-rpm-config git-core \
-    gcc-c++ make bzip2 gettext tar \
-    libxml2-devel libcurl-devel ruby-devel \
-    postgresql-devel && \
-  dnf clean all
+# RUN \
+#   dnf install -y redhat-rpm-config git-core \
+#     gcc-c++ make bzip2 gettext tar \
+#     libxml2-devel libcurl-devel ruby-devel \
+#     postgresql-devel && \
+#   dnf clean all
 
 RUN \
   # SoF Custom
