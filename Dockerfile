@@ -58,7 +58,13 @@ ARG HOME=/home/foreman
 # USER foreman
 WORKDIR $HOME
 # COPY --chown=foreman . ${HOME}/
-COPY . ${HOME}/
+# COPY . ${HOME}/
+
+RUN mkdir -p /tmp/app; \
+  git clone --depth=1 --branch 3.9.1 https://github.com/theforeman/foreman.git /tmp/app; \
+  rm -rf /tmp/app/.git; \
+  cp -r /tmp/app/* ${HOME}/; \
+  cd ${HOME};
 
 RUN ls -la;
 
@@ -135,7 +141,8 @@ ENV RAILS_LOG_TO_STDOUT=true
 
 USER foreman
 WORKDIR ${HOME}
-COPY --chown=foreman . ${HOME}/
+# COPY --chown=foreman . ${HOME}/
+COPY --from=foreman-builder /tmp/app/. ${HOME}/
 COPY --from=foreman-builder /usr/bin/entrypoint.sh /usr/bin/entrypoint.sh
 COPY --from=foreman-builder --chown=foreman:foreman ${HOME}/.bundle/config ${HOME}/.bundle/config
 COPY --from=foreman-builder --chown=foreman:foreman ${HOME}/Gemfile.lock ${HOME}/Gemfile.lock
