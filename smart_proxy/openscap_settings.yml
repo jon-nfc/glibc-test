@@ -1,5 +1,5 @@
 
-cat <<'EOF' > ${HOME}/config/settings.d/openscap_settings.yml
+cat <<'EOF' > ${HOME}/config/settings.d/openscap.yml
 ---
 :enabled: true
 

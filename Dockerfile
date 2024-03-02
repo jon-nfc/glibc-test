@@ -96,11 +96,12 @@ RUN \
   # SoF Custom
   dnf install -y zlib-devel xz patch; \
   # gem install nokogiri --platform=ruby; \
-  export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:usr/local/glibc-2.29; \
+  export LD_LIBRARY_PATH=/usr/local/glibc-2.29; \
   #dnf install -y rubygem-nokogiri; \
   # EoF Custom
-  bundle install && \
-  bundle binstubs --all && \
+  bundle install
+
+RUN bundle binstubs --all && \
   rm -rf vendor/ruby/*/cache/*.gem && \
   find vendor/ruby/*/gems -name "*.c" -delete && \
   find vendor/ruby/*/gems -name "*.o" -delete
