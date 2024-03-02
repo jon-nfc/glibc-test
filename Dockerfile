@@ -49,9 +49,10 @@ ENV BUNDLER_SKIPPED_GROUPS "test development openid libvirt journald facter cons
 ENV DATABASE_URL=nulldb://nohost
 # ENV BUNDLE_APP_CONFIG=''
 ARG HOME=/home/foreman
-USER foreman
+# USER foreman
 WORKDIR $HOME
-COPY --chown=foreman . ${HOME}/
+# COPY --chown=foreman . ${HOME}/
+COPY . ${HOME}/
 
 RUN ls -la;
 

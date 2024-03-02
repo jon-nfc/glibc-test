@@ -97,12 +97,13 @@ RUN ls -la; cat .bundle/config
 #   bundle config set --local retry 3; \
 #   ls -la;
 
-
+ENV BUNDLE_APP_CONFIG='${home}/vendor/bundle'
 
 # RUN gem install rkerberos; \
 RUN cd ${HOME}; \
-  bundle install; \
-  bundle binstubs --all; \
+  bundle install;
+
+RUN bundle binstubs --all; \
   rm -rf vendor/ruby/*/cache/*.gem; \
   find vendor/ruby/*/gems -name "*.c" -delete; \
   find vendor/ruby/*/gems -name "*.o" -delete
