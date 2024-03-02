@@ -6,7 +6,9 @@ FROM registry.gitlab.com/nofusscomputing/infrastructure/configuration-management
 # 3.3
 # ARG RUBY_VERSION="3.1"
 # ARG NODEJS_VERSION="20"
-ARG RUBY_VERSION="2.7"
+
+#ARG RUBY_VERSION="2.7"
+ARG RUBY_VERSION="3.0"
 ARG NODEJS_VERSION="14"
 ENV FOREMAN_FQDN=foreman.example.com
 ENV FOREMAN_DOMAIN=example.com
