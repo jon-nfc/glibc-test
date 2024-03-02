@@ -135,7 +135,7 @@ include:
 
         git clone --depth 1 --branch ${DOCKER_IMAGE_BUILD_TAG} https://github.com/theforeman/foreman.git build;
 
-        cp ./Gemfile.local.rb build/bundler.d/;
+        cp ./Gemfile.local-amd64.rb build/bundler.d/Gemfile.local.rb;
 
         # cp -f ./Dockerfile build/Dockerfile;
 
