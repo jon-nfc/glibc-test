@@ -106,8 +106,7 @@ RUN bundle config set --local without "${BUNDLER_SKIPPED_GROUPS}" && \
   # SoF Custom
 # RUN dnf install -y zlib-devel xz patch;
   # gem install nokogiri --platform=ruby; \
-RUN export LD_LIBRARY_PATH=/usr/local/glibc-2.29/lib/; \
-  gem install nokogiri --platform=ruby
+RUN gem install nokogiri:1.14.5 --platform=ruby
   #dnf install -y rubygem-nokogiri; \
   # EoF Custom
 RUN bundle install
