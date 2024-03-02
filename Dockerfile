@@ -45,11 +45,15 @@ COPY --chown=foreman . ${HOME}/
 
 
 
-RUN bundle config set --local without "${BUNDLER_SKIPPED_GROUPS}" && \
-  bundle config set --local clean true && \
-  bundle config set --local path vendor && \
-  bundle config set --local jobs 5 && \
-  bundle config set --local retry 3
+RUN bundle config set --local without "${BUNDLER_SKIPPED_GROUPS}"
+
+RUN bundle config set --local clean true
+
+RUN bundle config set --local path vendor
+
+RUN bundle config set --local jobs 5
+
+RUN bundle config set --local retry 3
 
 
 RUN bundle install && \
