@@ -53,12 +53,12 @@ ENV BUNDLER_SKIPPED_GROUPS="test development openid libvirt journald facter cons
 #     postgresql-devel && \
 #   dnf clean all
 
-RUN dnf install -y zlib-devel xz patch;
+# RUN dnf install -y zlib-devel xz patch;
 
 
-RUN export LD_LIBRARY_PATH=/usr/local/glibc-2.29/lib; \
-  gem install nokogiri --platform=ruby; \
-  export LD_LIBRARY_PATH="";
+# RUN export LD_LIBRARY_PATH=/usr/local/glibc-2.29/lib; \
+#   gem install nokogiri --platform=ruby; \
+#   export LD_LIBRARY_PATH="";
 
 
 # # SoF Custom
@@ -102,10 +102,10 @@ RUN bundle config set --local without "${BUNDLER_SKIPPED_GROUPS}" && \
   # SoF Custom
 # RUN dnf install -y zlib-devel xz patch;
   # gem install nokogiri --platform=ruby; \
-RUN export LD_LIBRARY_PATH=/usr/local/glibc-2.29/lib; \
+#RUN export LD_LIBRARY_PATH=/usr/local/glibc-2.29/lib; \
   #dnf install -y rubygem-nokogiri; \
   # EoF Custom
-  bundle install
+RUN bundle install
 
 RUN bundle binstubs --all && \
   rm -rf vendor/ruby/*/cache/*.gem && \
