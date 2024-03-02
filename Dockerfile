@@ -38,7 +38,7 @@ FROM foreman-base-ruby as foreman-builder
 RUN apk add --update bash git gcc cmake libc-dev build-base \
                          curl-dev libxml2-dev gettext \
                         #  sqlite-dev \
-                        postgresql-devel \
+                        postgresql12-dev \
                          npm \
      && rm -rf /var/cache/apk/*
 
