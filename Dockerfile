@@ -74,9 +74,9 @@ WORKDIR $HOME
 RUN mkdir -p /tmp/app; \
   git clone --depth=1 --branch 3.9.1 https://github.com/theforeman/foreman.git /tmp/app; \
   rm -rf /tmp/app/.git; \
-  chown foreman:foreman -R /tmp/app; \
+  chown foreman:foreman -R /tmp/app/.; \
   cp -r /tmp/app/* ${HOME}/; \
-  chmod 770 -R ${HOME}; \
+  chmod 770 -R ${HOME}/.; \
   cd ${HOME};
 
 RUN ls -la;
