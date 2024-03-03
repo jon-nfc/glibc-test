@@ -106,14 +106,28 @@ RUN mv -v db/schema.rb.nulldb db/schema.rb
 
 RUN bundle exec rake assets:clean assets:precompile
 
+
+
+
+
+FROM node:14.0.0-alpine3.11 as node-builder
+
+
+ARG HOME=/home/foreman
+
+WORKDIR ${HOME}
+# COPY --chown=foreman . ${HOME}/
+COPY --from=foreman-builder /tmp/app/. ${HOME}/
+
+
 # ^4.5.0 to low for node 14. https://www.npmjs.com/package/node-sass
-RUN sed -E 's/"node-sass": (.+)/"node-sass": "~4.14",/g' -i ${HOME}/package.json; \
-  cat ${HOME}/package.json;
+# RUN sed -E 's/"node-sass": (.+)/"node-sass": "~4.14",/g' -i ${HOME}/package.json; \
+#   cat ${HOME}/package.json;
 
 # this line was test. removing to revert
-RUN npm install --no-audit --no-optional --legacy-peer-deps && \
+# RUN npm install --no-audit --no-optional --legacy-peer-deps && \
 # RUN npm install --no-audit --no-optional --force && \
-# RUN npm install --no-audit --no-optional && \
+RUN npm install --no-audit --no-optional && \
   ./node_modules/webpack/bin/webpack.js --config config/webpack.config.js && \
 # cleanups
   rm -rf public/webpack/stats.json ./node_modules vendor/ruby/*/cache vendor/ruby/*/gems/*/node_modules bundler.d/nulldb.rb db/schema.rb && \
@@ -162,7 +176,7 @@ COPY --from=foreman-builder /tmp/app/. ${HOME}/
 COPY --from=foreman-builder --chown=foreman:foreman ${HOME}/.bundle/config ${HOME}/.bundle/config
 COPY --from=foreman-builder --chown=foreman:foreman ${HOME}/Gemfile.lock ${HOME}/Gemfile.lock
 COPY --from=foreman-builder --chown=foreman:foreman ${HOME}/vendor/ruby ${HOME}/vendor/ruby
-COPY --from=foreman-builder --chown=foreman:foreman ${HOME}/public ${HOME}/public
+COPY --from=node-builder --chown=foreman:foreman ${HOME}/public ${HOME}/public
 
 # RUN echo gem '"rdoc"' > bundler.d/container.rb && echo gem '"tzinfo-data"' >> bundler.d/container.rb
 

@@ -1,0 +1,40 @@
+
+FROM node:14.0.0-alpine3.11 as node-builder
+
+
+ARG HOME=/home/foreman
+
+WORKDIR ${HOME}
+
+
+RUN mkdir -p /tmp/app; \
+  mkdir -p ${HOME}; \
+  git clone --depth=1 --branch 3.9.1 https://github.com/theforeman/foreman.git /tmp/app; \
+  rm -rf /tmp/app/.git; \
+  cp -r /tmp/app/* ${HOME}/; \
+  cd ${HOME};
+
+
+RUN npm version; \
+  ls -l ${HOME}
+
+
+# ^4.5.0 to low for node 14. https://www.npmjs.com/package/node-sass
+# RUN sed -E 's/"node-sass": (.+)/"node-sass": "~4.14",/g' -i ${HOME}/package.json; \
+#   cat ${HOME}/package.json;
+
+# this line was test. removing to revert
+# RUN npm install --no-audit --no-optional --legacy-peer-deps && \
+# RUN npm install --no-audit --no-optional --force && \
+RUN npm install --no-audit --no-optional
+
+
+RUN ./node_modules/webpack/bin/webpack.js --config config/webpack.config.js
+
+
+# cleanups
+RUN rm -rf public/webpack/stats.json ./node_modules vendor/ruby/*/cache vendor/ruby/*/gems/*/node_modules bundler.d/nulldb.rb db/schema.rb
+  # bundle config without "${BUNDLER_SKIPPED_GROUPS} assets" && \
+  # bundle install
+
+
