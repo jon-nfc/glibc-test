@@ -30,6 +30,7 @@ include:
 
 container_scanning:
   stage: test
+  needs: []
   variables:
     CS_IMAGE: $DOCKER_IMAGE_BUILD_REGISTRY/smart-proxy:$DOCKER_IMAGE_BUILD_TAG
 
