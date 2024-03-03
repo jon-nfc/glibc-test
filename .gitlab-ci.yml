@@ -41,7 +41,6 @@ gemnasium-dependency_scanning:
   stage: test
   needs: []
   variables:
-    DS_REMEDIATE: "false"
     GIT_STRATEGY: none
   before_script:
     - git clone --depth 1 --branch 3.9.1 https://github.com/theforeman/smart-proxy.git .
