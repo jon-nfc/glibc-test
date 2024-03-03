@@ -47,11 +47,11 @@ jobs:
       #     cache-from: type=gha
       #     cache-to: type=gha,mode=max
 
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:foreman-amd64-3.91
+      # - name: Extract metadata (tags, labels) for Docker
+      #   id: meta
+      #   uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+      #   with:
+      #     images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:foreman-amd64-3.91
 
 
       - uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
@@ -59,7 +59,7 @@ jobs:
           context: .
           platforms: linux/amd64
           push: true
-          # tags: ghcr.io/${{ github.repository_owner }}/glibc-test:foreman-amd64-3.9.1
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:foreman-amd64-3.91
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           file: Dockerfile-amd64
