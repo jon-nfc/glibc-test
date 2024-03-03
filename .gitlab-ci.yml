@@ -15,6 +15,7 @@ stages:
   - preperation
   - build
   - publish
+  - test
 
 
 include:
@@ -28,6 +29,7 @@ include:
 
 
 container_scanning:
+  stage: test
   variables:
     CS_IMAGE: $DOCKER_IMAGE_BUILD_REGISTRY/smart-proxy:$DOCKER_IMAGE_BUILD_TAG
 
