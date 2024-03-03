@@ -1,57 +1,106 @@
 
-FROM ruby:2.7-alpine3.16 as base
+ARG USER_GROUP_ID=65000
 
-RUN export
+ARG USER_NAME=foreman
 
-ARG HOME=/home/foreman
+FROM ruby:2.7-alpine3.16 as foreman-base
 
-RUN mkdir -p ${HOME}
+ARG USER_NAME $USER_NAME
 
-WORKDIR ${HOME}
+ARG HOME /home/$USER_NAME
 
-RUN ls -la /home/foreman
-
-RUN bundle config set --local without "${BUNDLER_SKIPPED_GROUPS}"; \
-  bundle config set --local clean true; \
-  bundle config set --local path vendor; \
-  bundle config set --local jobs 5; \
-  bundle config set --local retry 3; \
-  ls -la ${HOME};
+ARG USER_GROUP_ID $USER_GROUP_ID
 
 
 
-RUN ls -la /root
+ENV HOME /home/$USER_NAME
 
-ENV BUNDLE_APP_CONFIG='/home/foreman/.bundler/config'
-ENV GEM_HOME "${HOME}/vendor/ruby/2.7.0"
+ENV USER_GROUP_ID $USER_GROUP_ID
 
-RUN bundle config list
+ENV USER_NAME $USER_NAME
+
+ENV BUNDLE_APP_CONFIG=''
+
+RUN export; echo '221';
+
+
+
+RUN export; addgroup -g ${USER_GROUP_ID} -S foreman; \
+  adduser -S -h ${HOME} -u ${USER_GROUP_ID} -G foreman foreman
+
+# WORKDIR $HOME
+
+
+# RUN bundle config set --local without "${BUNDLER_SKIPPED_GROUPS}"; \
+#   bundle config set --local clean true; \
+#   bundle config set --local path vendor; \
+#   bundle config set --local jobs 5; \
+#   bundle config set --local retry 3; \
+#   ls -la ${HOME};
+
+
+
+# RUN ls -la /root
+# ENV BUNDLE_APP_CONFIG=''
+# ENV BUNDLE_APP_CONFIG='/home/foreman/.bundle/config'
+ENV BUNDLE_APP_CONFIG='/home/foreman/.bundle'
+# ENV GEM_HOME "${HOME}/vendor/ruby/2.7.0"
+
+# RUN bundle config list
 # ENV GEM_HOME "${HOME}/vendor/ruby/2.7.0"
 # ENV BUNDLE_APP_CONFIG=''
 
-RUN gem install rake bundler:2.4.22;
+# RUN gem install --no-document --verbose rake bundler:2.4.22;
 
+
+# RUN bundle config set --local without "${BUNDLER_SKIPPED_GROUPS}"; \
+#   bundle config set --local clean true; \
+#   bundle config set --local path vendor; \
+#   bundle config set --local jobs 5; \
+#   bundle config set --local retry 3; \
+#   ls -la ${HOME};
 
 ##########################################################################
 #
 #    Builder
 #
 ##########################################################################
-FROM base as builder
+FROM foreman-base as foreman-builder
 
-ARG HOME=/home/foreman
 
-# ENV GEM_HOME "${HOME}/vendor/ruby/2.7.0"
+
+ARG HOME /home/$USER_NAME
+
+ARG USER_GROUP_ID $USER_GROUP_ID
+
+ARG USER_NAME $USER_NAME
+
+
+# ENV HOME $HOME
+
+# ENV USER_GROUP_ID $USER_GROUP_ID
+
+# ENV USER_NAME $USER_NAME
+
 # ENV BUNDLE_APP_CONFIG=''
 
+
+RUN export;
+
+
+
+# RUN echo ${HOME}; mkdir ${HOME}
+
+WORKDIR $HOME
 
 RUN apk add \
     alpine-sdk \
     libffi-dev \
     ruby-dev \
     ruby-rake \
-    git; \
-  git clone --depth=1 --branch 3.9.1 https://github.com/theforeman/smart-proxy.git /tmp/app; \
+    git;
+
+RUN git clone --depth=1 --branch 3.9.1 https://github.com/theforeman/smart-proxy.git /tmp/app; \
   rm \
     /tmp/app/bundler.d/libvirt.rb \
     /tmp/app/bundler.d/krb5.rb \
@@ -59,24 +108,28 @@ RUN apk add \
     /tmp/app/bundler.d/windows.rb \
     /tmp/app/bundler.d/bmc.rb \
     /tmp/app/bundler.d/journald.rb; \
-  rm -rf /tmp/app/.git; \
-  cp -r /tmp/app/* ${HOME}/; \
+  rm -rf /tmp/app/.git;
+
+
+COPY --chown=${USER_GROUP_ID}:${USER_GROUP_ID} foreman_openscap_proxy.rb /tmp/app/bundler.d/
+
+COPY --chown=${USER_GROUP_ID}:${USER_GROUP_ID} smart_proxy_settings.yml /tmp/app/config/settings.yml
+
+COPY --chown=${USER_GROUP_ID}:${USER_GROUP_ID} openscap_settings.yml /tmp/app/config/settings.d/openscap.yml
+
+
+RUN cp -r /tmp/app/* ${HOME}/; \
+  chown -R ${USER_GROUP_ID}:${USER_GROUP_ID} ${HOME}/.; \
+  chmod 770 -R ${HOME}/.; \
   cd ${HOME}; 
 
-
-
-COPY foreman_openscap_proxy.rb ${HOME}/bundler.d/
-
-COPY smart_proxy_settings.yml ${HOME}/config/settings.yml
-
-COPY openscap_settings.yml ${HOME}/config/settings.d/openscap.yml
 
 
 ENV BUNDLER_SKIPPED_GROUPS="test development openid libvirt journald facter console"
 
 # ENV GEM_HOME=
 # ENV BUNDLE_APP_CONFIG=
-WORKDIR ${HOME}
+
 
 # RUN export GEM_HOME=; export BUNDLE_APP_CONFIG=
 # RUN ls -la; rm -rf .bundle; mkdir -p .bundle; \
@@ -84,15 +137,25 @@ WORKDIR ${HOME}
 #   echo '"BUNDLE_PATH: "vendor"' > .bundle/config; \
 #   ls -la; ls -la .bundle/ 
 
-RUN export
+# RUN export
 
-RUN echo $PWD
+RUN echo $PWD; ls -la; export
 
-RUN ls -la; cat .bundle/config
+# RUN ls -la; cat .bundle/config
 
-RUN bundle config list
+# RUN bundle config list
 
-# RUN bundle --path=vendor; ls -la; ls -la .bundle/
+# RUN ls -la .bundle/
+# USER foreman
+
+# ENV BUNDLE_APP_CONFIG=''
+# ENV GEM_HOME=''
+
+# RUN bundle config set --local path vendor;
+
+# RUN export; cd ${HOME}; echo $PWD; ls -la; whoami; bundle config set --local path vendor; ls -la
+
+# RUN ls -la;
 
 # RUN bundle config set --local without "${BUNDLER_SKIPPED_GROUPS}"; \
 #   bundle config set --local clean true; \
@@ -101,11 +164,16 @@ RUN bundle config list
 #   bundle config set --local retry 3; \
 #   ls -la;
 
+
+# RUN echo $PWD; bundle config
+
 # ENV BUNDLE_APP_CONFIG='${HOME}/vendor/bundle'
 
+
+RUN bundle config set --local path vendor;
+
 # RUN gem install rkerberos; \
-RUN cd ${HOME}; \
-  bundle install;
+RUN bundle install;
 
 RUN bundle binstubs --all; \
   rm -rf vendor/ruby/*/cache/*.gem; \
@@ -119,7 +187,7 @@ RUN cd ${HOME}; rm -rf vendor/ruby/*/cache vendor/ruby/*/gems/*/node_modules bun
   # bundle config without "test development"; \
   bundle install
 
-
+RUN ls -la;
 # RUN echo "1"; ls -la ${HOME}; ls -laR ${HOME}/.bundle
 
 
@@ -128,12 +196,15 @@ RUN cd ${HOME}; rm -rf vendor/ruby/*/cache vendor/ruby/*/gems/*/node_modules bun
 #    APP
 #
 ##########################################################################
-FROM base
+FROM foreman-base as application
 
-# ENV GEM_HOME ""
-# ENV BUNDLE_APP_CONFIG=''
 
-ARG HOME=/home/foreman
+ARG HOME /home/${USER_NAME}
+
+ARG USER_GROUP_ID ${USER_GROUP_ID}
+
+ARG USER_NAME ${USER_NAME}
+
 
 # ENV GEM_HOME "${HOME}/vendor/ruby/2.7.0"
 
@@ -143,25 +214,27 @@ ENV RAILS_SERVE_STATIC_FILES=true
 
 ENV RAILS_LOG_TO_STDOUT=true
 
+USER ${USER_GROUP_ID}
+
 WORKDIR ${HOME}
 
-COPY --from=builder /tmp/app/. ${HOME}/
+COPY --from=foreman-builder --chown=${USER_GROUP_ID}:${USER_GROUP_ID} /tmp/app/. ${HOME}/
 
 # RUN ls -l ${HOME}
-COPY --from=builder ${HOME}/.bundle/config ${HOME}/.bundle/config
+COPY --from=foreman-builder --chown=${USER_GROUP_ID}:${USER_GROUP_ID} ${HOME}/.bundle/config ${HOME}/.bundle/config
 
-COPY --from=builder ${HOME}/config ${HOME}/config
+COPY --from=foreman-builder --chown=${USER_GROUP_ID}:${USER_GROUP_ID} ${HOME}/config ${HOME}/config
 
-COPY --from=builder ${HOME}/Gemfile.lock ${HOME}/Gemfile.lock
+COPY --from=foreman-builder --chown=${USER_GROUP_ID}:${USER_GROUP_ID} ${HOME}/Gemfile.lock ${HOME}/Gemfile.lock
 
-COPY --from=builder ${HOME}/vendor/ruby ${HOME}/vendor/ruby
+COPY --from=foreman-builder --chown=${USER_GROUP_ID}:${USER_GROUP_ID} ${HOME}/vendor/ruby ${HOME}/vendor/ruby
 
 
-COPY --from=builder ${HOME}/bundler.d/foreman_openscap_proxy.rb ${HOME}/bundler.d/foreman_openscap_proxy.rb
+# COPY --from=foreman-builder ${HOME}/bundler.d/foreman_openscap_proxy.rb ${HOME}/bundler.d/foreman_openscap_proxy.rb
 
-COPY --from=builder ${HOME}/config/settings.yml ${HOME}/config/settings.yml
+# COPY --from=foreman-builder ${HOME}/config/settings.yml ${HOME}/config/settings.yml
 
-COPY --from=builder ${HOME}/config/settings.d/openscap.yml ${HOME}/config/settings.d/openscap.yml
+# COPY --from=foreman-builder ${HOME}/config/settings.d/openscap.yml ${HOME}/config/settings.d/openscap.yml
 
 # COPY --from=builder ${HOME}/public ${HOME}/public
 
