@@ -7,6 +7,9 @@ ARG HOME=/home/foreman
 WORKDIR ${HOME}
 
 
+RUN apk add --no-cache \
+  git
+
 RUN mkdir -p /tmp/app; \
   mkdir -p ${HOME}; \
   git clone --depth=1 --branch 3.9.1 https://github.com/theforeman/foreman.git /tmp/app; \
