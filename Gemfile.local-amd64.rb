@@ -31,24 +31,19 @@ gem 'foreman_statistics', :git => "https://github.com/theforeman/foreman_statist
 gem 'foreman_vault', :git => "https://github.com/dm-drogeriemarkt/foreman_vault.git", :branch => '1.2.0'
 
 
+# latest additions
+gem 'foreman_webhooks', :git => "https://github.com/theforeman/foreman_webhooks.git", :branch => 'v3.2.1'
 
-# May be required to link hosts to server.
-gem 'katello', :git => "https://github.com/Katello/katello.git", :branch => '4.11.1'
+gem 'foreman_kubevirt', :git => "https://github.com/theforeman/foreman_kubevirt.git", :branch => 'v0.1.9'
+
+gem 'foreman_git_templates', :git => "https://github.com/dm-drogeriemarkt/foreman_git_templates.git", :branch => '1.0.6'
 
 
-# Not needed https://community.theforeman.org/t/external-ipam-core-feature-merged/17871
-# https://github.com/grizzthedj/foreman_ipam
-# gem 'foreman_ipam'
-# https://github.com/theforeman/foreman_discovery
-# gem 'foreman_discovery' '=22.0.4'
+
+
+
+# May be required to link hosts to server. nope. read debian guide
+# gem 'katello', :git => "https://github.com/Katello/katello.git", :branch => '4.11.1'
 
 # # only for icinga2
 # #gem 'foreman_monitoring'
-
-# 
-
-
-
-
-
-
