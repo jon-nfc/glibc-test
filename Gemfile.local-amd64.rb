@@ -36,7 +36,12 @@ gem 'foreman_webhooks', :git => "https://github.com/theforeman/foreman_webhooks.
 
 gem 'foreman_kubevirt', :git => "https://github.com/theforeman/foreman_kubevirt.git", :branch => 'v0.1.9'
 
-gem 'foreman_git_templates', :git => "https://github.com/dm-drogeriemarkt/foreman_git_templates.git", :branch => '1.0.6'
+
+# https://github.com/dm-drogeriemarkt/foreman_git_templates/issues/66
+# apparent fixes for foreman 3.1
+gem 'foreman_git_templates', :git => "https://github.com/dm-drogeriemarkt/foreman_git_templates.git", :ref => 'e8273a622d4f51a6cfe12ad32d3cd08840b5c1b7'
+
+#gem 'foreman_git_templates', :git => "https://github.com/dm-drogeriemarkt/foreman_git_templates.git", :branch => '1.0.6'
 
 
 
