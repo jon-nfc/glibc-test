@@ -134,7 +134,7 @@ WORKDIR ${HOME}
 # COPY --chown=foreman . ${HOME}/
 COPY --from=foreman-ruby-builder --chown=foreman:foreman ${HOME}/. ${HOME}/
 
-USER foreman
+# USER foreman
 
 # ^4.5.0 to low for node 14. https://www.npmjs.com/package/node-sass
 # RUN sed -E 's/"node-sass": (.+)/"node-sass": "~4.14",/g' -i ${HOME}/package.json; \
