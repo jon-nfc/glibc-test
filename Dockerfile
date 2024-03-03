@@ -20,7 +20,7 @@ ARG HOME=/home/foreman
 WORKDIR $HOME
 # ENV BUNDLE_APP_CONFIG='${home}/vendor/bundle'
 
-ENV BUNDLE_APP_CONFIG '/home/foreman/.bundler/config'
+ENV BUNDLE_APP_CONFIG '/home/foreman/.bundle/config'
 ENV GEM_HOME "${HOME}/vendor/ruby/2.7.0"
 
 
