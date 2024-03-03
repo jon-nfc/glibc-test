@@ -20,8 +20,8 @@ ARG HOME=/home/foreman
 WORKDIR $HOME
 # ENV BUNDLE_APP_CONFIG='${home}/vendor/bundle'
 
-ENV BUNDLE_APP_CONFIG '/home/foreman/.bundle/config'
-ENV GEM_HOME "${HOME}/vendor/ruby/2.7.0"
+ENV BUNDLE_APP_CONFIG '/home/foreman/.bundle'
+# ENV GEM_HOME "${HOME}/vendor/ruby/2.7.0"
 
 
 # RUN bundle config set --local without "${BUNDLER_SKIPPED_GROUPS}"; \
@@ -81,7 +81,7 @@ RUN echo ""; mkdir -p /tmp/app; \
 
 RUN echo ""; ls -la;
 
-USER foreman
+# USER foreman
 
 # RUN mkdir -p .bundle; \
 #   echo "---" > .bundle/config; \
@@ -121,7 +121,7 @@ FROM node:14.0.0-alpine3.11 as foreman-node-builder
 
 ARG HOME=/home/foreman
 
-USER 0
+# USER 0
 
 RUN apk add --no-cache \
     git \
