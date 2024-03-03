@@ -24,12 +24,12 @@ ENV BUNDLE_APP_CONFIG '/home/foreman/.bundle/config'
 ENV GEM_HOME "${HOME}/vendor/ruby/2.7.0"
 
 
-RUN bundle config set --local without "${BUNDLER_SKIPPED_GROUPS}"; \
-  bundle config set --local clean true; \
-  bundle config set --local path vendor; \
-  bundle config set --local jobs 5; \
-  bundle config set --local retry 3; \
-  ls -la ${HOME};
+# RUN bundle config set --local without "${BUNDLER_SKIPPED_GROUPS}"; \
+#   bundle config set --local clean true; \
+#   bundle config set --local path vendor; \
+#   bundle config set --local jobs 5; \
+#   bundle config set --local retry 3; \
+#   ls -la ${HOME};
 
 RUN addgroup --system foreman
 RUN adduser --home $HOME --system --shell /bin/false --ingroup foreman --gecos Foreman foreman
