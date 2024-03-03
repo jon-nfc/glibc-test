@@ -9,8 +9,10 @@ WORKDIR ${HOME}
 
 
 RUN apk add --no-cache \
-  git \
-  python
+    git \
+    python \
+    alpine-sdk \
+    libffi-dev
 
 RUN mkdir -p /tmp/app; \
   mkdir -p ${HOME}; \
