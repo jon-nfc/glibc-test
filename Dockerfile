@@ -191,7 +191,7 @@ COPY --from=foreman-builder /tmp/app/. ${HOME}/
 COPY --from=foreman-builder --chown=foreman:foreman ${HOME}/.bundle/config ${HOME}/.bundle/config
 COPY --from=foreman-builder --chown=foreman:foreman ${HOME}/Gemfile.lock ${HOME}/Gemfile.lock
 COPY --from=foreman-builder --chown=foreman:foreman ${HOME}/vendor/ruby ${HOME}/vendor/ruby
-COPY --from=node-builder --chown=foreman:foreman ${HOME}/public ${HOME}/public
+COPY --from=foreman-builder --chown=foreman:foreman ${HOME}/public ${HOME}/public
 
 # RUN echo gem '"rdoc"' > bundler.d/container.rb && echo gem '"tzinfo-data"' >> bundler.d/container.rb
 
