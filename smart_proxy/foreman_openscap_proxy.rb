@@ -49,5 +49,4 @@ gem 'smart_proxy_ipam', :git => "https://github.com/grizzthedj/smart_proxy_ipam.
 
 gem 'smart_proxy_discovery', :git => "https://github.com/theforeman/smart_proxy_discovery.git", :branch => '1.0.5'
 
-
-# EOF
+gem 'smart_proxy_dns_powerdns', :git => "https://github.com/theforeman/smart_proxy_dns_powerdns.git", :branch => '1.0.0'

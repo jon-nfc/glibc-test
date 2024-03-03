@@ -3,7 +3,16 @@ ARG USER_GROUP_ID=65000
 
 ARG USER_NAME=foreman
 
+ARG SMART_PROXY_TAG=3.9.1
+
+
+##########################################################################
+#
+#    Base
+#
+##########################################################################
 FROM ruby:2.7-alpine3.16 as foreman-base
+
 
 ARG USER_NAME $USER_NAME
 
@@ -11,7 +20,7 @@ ARG HOME /home/$USER_NAME
 
 ARG USER_GROUP_ID $USER_GROUP_ID
 
-
+ARG SMART_PROXY_TAG $SMART_PROXY_TAG
 
 ENV HOME /home/$USER_NAME
 
@@ -19,46 +28,20 @@ ENV USER_GROUP_ID $USER_GROUP_ID
 
 ENV USER_NAME $USER_NAME
 
-ENV BUNDLE_APP_CONFIG=''
+ENV SMART_PROXY_VERSION $SMART_PROXY_TAG
 
-RUN export; echo '221';
-
-
-
-RUN export; addgroup -g ${USER_GROUP_ID} -S foreman; \
-  adduser -S -h ${HOME} -u ${USER_GROUP_ID} -G foreman foreman
-
-# WORKDIR $HOME
-
-
-# RUN bundle config set --local without "${BUNDLER_SKIPPED_GROUPS}"; \
-#   bundle config set --local clean true; \
-#   bundle config set --local path vendor; \
-#   bundle config set --local jobs 5; \
-#   bundle config set --local retry 3; \
-#   ls -la ${HOME};
-
-
-
-# RUN ls -la /root
-# ENV BUNDLE_APP_CONFIG=''
-# ENV BUNDLE_APP_CONFIG='/home/foreman/.bundle/config'
 ENV BUNDLE_APP_CONFIG='/home/foreman/.bundle'
-# ENV GEM_HOME "${HOME}/vendor/ruby/2.7.0"
-
-# RUN bundle config list
-# ENV GEM_HOME "${HOME}/vendor/ruby/2.7.0"
-# ENV BUNDLE_APP_CONFIG=''
-
-# RUN gem install --no-document --verbose rake bundler:2.4.22;
 
 
-# RUN bundle config set --local without "${BUNDLER_SKIPPED_GROUPS}"; \
-#   bundle config set --local clean true; \
-#   bundle config set --local path vendor; \
-#   bundle config set --local jobs 5; \
-#   bundle config set --local retry 3; \
-#   ls -la ${HOME};
+RUN export; \
+  addgroup -g ${USER_GROUP_ID} -S foreman; \
+  adduser -S -h ${HOME} -u ${USER_GROUP_ID} -G foreman foreman; \
+  chown 0:${USER_GROUP_ID} /var/log; \
+  chmod 770 /var/log
+
+
+WORKDIR $HOME
+
 
 ##########################################################################
 #
@@ -76,23 +59,6 @@ ARG USER_GROUP_ID $USER_GROUP_ID
 ARG USER_NAME $USER_NAME
 
 
-# ENV HOME $HOME
-
-# ENV USER_GROUP_ID $USER_GROUP_ID
-
-# ENV USER_NAME $USER_NAME
-
-# ENV BUNDLE_APP_CONFIG=''
-
-
-RUN export;
-
-
-
-# RUN echo ${HOME}; mkdir ${HOME}
-
-WORKDIR $HOME
-
 RUN apk add \
     alpine-sdk \
     libffi-dev \
@@ -100,7 +66,8 @@ RUN apk add \
     ruby-rake \
     git;
 
-RUN git clone --depth=1 --branch 3.9.1 https://github.com/theforeman/smart-proxy.git /tmp/app; \
+
+RUN export; echo "${SMART_PROXY_VERSION}"; git clone --depth=1 --branch ${SMART_PROXY_VERSION} https://github.com/theforeman/smart-proxy.git /tmp/app; \
   rm \
     /tmp/app/bundler.d/libvirt.rb \
     /tmp/app/bundler.d/krb5.rb \
@@ -120,75 +87,32 @@ COPY --chown=${USER_GROUP_ID}:${USER_GROUP_ID} openscap_settings.yml /tmp/app/co
 
 RUN cp -r /tmp/app/* ${HOME}/; \
   chown -R ${USER_GROUP_ID}:${USER_GROUP_ID} ${HOME}/.; \
-  chmod 770 -R ${HOME}/.; \
-  cd ${HOME}; 
+  chmod 770 -R ${HOME}/.;
 
 
-
-ENV BUNDLER_SKIPPED_GROUPS="test development openid libvirt journald facter console"
-
-# ENV GEM_HOME=
-# ENV BUNDLE_APP_CONFIG=
+ENV BUNDLER_SKIPPED_GROUPS="test development"
 
 
-# RUN export GEM_HOME=; export BUNDLE_APP_CONFIG=
-# RUN ls -la; rm -rf .bundle; mkdir -p .bundle; \
-#   echo "---" > .bundle/config; \
-#   echo '"BUNDLE_PATH: "vendor"' > .bundle/config; \
-#   ls -la; ls -la .bundle/ 
-
-# RUN export
-
-RUN echo $PWD; ls -la; export
-
-# RUN ls -la; cat .bundle/config
-
-# RUN bundle config list
-
-# RUN ls -la .bundle/
-# USER foreman
-
-# ENV BUNDLE_APP_CONFIG=''
-# ENV GEM_HOME=''
-
-# RUN bundle config set --local path vendor;
-
-# RUN export; cd ${HOME}; echo $PWD; ls -la; whoami; bundle config set --local path vendor; ls -la
-
-# RUN ls -la;
-
-# RUN bundle config set --local without "${BUNDLER_SKIPPED_GROUPS}"; \
-#   bundle config set --local clean true; \
-#   bundle config set --local path vendor; \
-#   bundle config set --local jobs 5; \
-#   bundle config set --local retry 3; \
-#   ls -la;
+RUN bundle config set --local without "${BUNDLER_SKIPPED_GROUPS}"; \
+  bundle config set --local clean true; \
+  bundle config set --local path vendor; \
+  bundle config set --local jobs 5; \
+  bundle config set --local retry 3;
 
 
-# RUN echo $PWD; bundle config
-
-# ENV BUNDLE_APP_CONFIG='${HOME}/vendor/bundle'
-
-
-RUN bundle config set --local path vendor;
-
-# RUN gem install rkerberos; \
 RUN bundle install;
+
 
 RUN bundle binstubs --all; \
   rm -rf vendor/ruby/*/cache/*.gem; \
   find vendor/ruby/*/gems -name "*.c" -delete; \
   find vendor/ruby/*/gems -name "*.o" -delete
 
-# RUN bundle exec rake assets:clean assets:precompile;
 
-
-RUN cd ${HOME}; rm -rf vendor/ruby/*/cache vendor/ruby/*/gems/*/node_modules bundler.d/nulldb.rb db/schema.rb; \
-  # bundle config without "test development"; \
+RUN rm -rf vendor/ruby/*/cache vendor/ruby/*/gems/*/node_modules bundler.d/nulldb.rb db/schema.rb; \
   bundle install
 
 RUN ls -la;
-# RUN echo "1"; ls -la ${HOME}; ls -laR ${HOME}/.bundle
 
 
 ##########################################################################
@@ -199,28 +123,14 @@ RUN ls -la;
 FROM foreman-base as application
 
 
-ARG HOME /home/${USER_NAME}
-
-ARG USER_GROUP_ID ${USER_GROUP_ID}
-
-ARG USER_NAME ${USER_NAME}
+ARG USER_GROUP_ID $USER_GROUP_ID
 
 
-# ENV GEM_HOME "${HOME}/vendor/ruby/2.7.0"
+USER $USER_GROUP_ID
 
-ENV RAILS_ENV=production
-
-ENV RAILS_SERVE_STATIC_FILES=true
-
-ENV RAILS_LOG_TO_STDOUT=true
-
-USER ${USER_GROUP_ID}
-
-WORKDIR ${HOME}
 
 COPY --from=foreman-builder --chown=${USER_GROUP_ID}:${USER_GROUP_ID} /tmp/app/. ${HOME}/
 
-# RUN ls -l ${HOME}
 COPY --from=foreman-builder --chown=${USER_GROUP_ID}:${USER_GROUP_ID} ${HOME}/.bundle/config ${HOME}/.bundle/config
 
 COPY --from=foreman-builder --chown=${USER_GROUP_ID}:${USER_GROUP_ID} ${HOME}/config ${HOME}/config
@@ -230,53 +140,4 @@ COPY --from=foreman-builder --chown=${USER_GROUP_ID}:${USER_GROUP_ID} ${HOME}/Ge
 COPY --from=foreman-builder --chown=${USER_GROUP_ID}:${USER_GROUP_ID} ${HOME}/vendor/ruby ${HOME}/vendor/ruby
 
 
-# COPY --from=foreman-builder ${HOME}/bundler.d/foreman_openscap_proxy.rb ${HOME}/bundler.d/foreman_openscap_proxy.rb
-
-# COPY --from=foreman-builder ${HOME}/config/settings.yml ${HOME}/config/settings.yml
-
-# COPY --from=foreman-builder ${HOME}/config/settings.d/openscap.yml ${HOME}/config/settings.d/openscap.yml
-
-# COPY --from=builder ${HOME}/public ${HOME}/public
-
-# RUN gem install rkerberos;
-
 CMD bundle exec bin/smart-proxy
-
-
-
-# cd smart_proxy_openscap
-
-# bundle install
-
-# gem build
-
-
-
-# git clone --depth=1 --branch 3.9.1 https://github.com/theforeman/smart-proxy.git
-
-# rm bundler.d/libvirt.rb
-# rm bundler.d/krb5.rb
-# rm bundler.d/realm_freeipa.rb
-# rm bundler.d/windows.rb
-# rm bundler.d/bmc.rb
-# rm bundler.d/journald.rb
-
-# bundle install --with development
-
-# # to run
-# bundle exec ruby bin/smart-proxy
-
-
-
-
-
-# dockerfile
-
-# copy --from=build smart_proxy_openscap-0.9.2.gem
-
-
-# cat <<'EOF' > bundler.d/openscap.rb
-
-# gem 'smart_proxy_openscap', :git => "https://github.com/theforeman/smart_proxy_openscap.git", :branch => 'v0.9.2'
-
-# EOF
