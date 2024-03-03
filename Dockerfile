@@ -74,11 +74,13 @@ WORKDIR $HOME
 RUN mkdir -p /tmp/app; \
   git clone --depth=1 --branch 3.9.1 https://github.com/theforeman/foreman.git /tmp/app; \
   rm -rf /tmp/app/.git; \
+  chown foreman:foreman -R /tmp/app; \
   cp -r /tmp/app/* ${HOME}/; \
   cd ${HOME};
 
 RUN ls -la;
 
+USER foreman
 
 # RUN mkdir -p .bundle; \
 #   echo "---" > .bundle/config; \
@@ -118,6 +120,8 @@ FROM node:14.0.0-alpine3.11 as foreman-node-builder
 
 ARG HOME=/home/foreman
 
+USER 0
+
 RUN apk add --no-cache \
     git \
     python \
@@ -127,8 +131,9 @@ RUN apk add --no-cache \
 
 WORKDIR ${HOME}
 # COPY --chown=foreman . ${HOME}/
-COPY --from=foreman-ruby-builder ${HOME}/. ${HOME}/
+COPY --from=foreman-ruby-builder --chown=foreman:foreman ${HOME}/. ${HOME}/
 
+USER foreman
 
 # ^4.5.0 to low for node 14. https://www.npmjs.com/package/node-sass
 # RUN sed -E 's/"node-sass": (.+)/"node-sass": "~4.14",/g' -i ${HOME}/package.json; \
@@ -139,7 +144,7 @@ COPY --from=foreman-ruby-builder ${HOME}/. ${HOME}/
 # RUN npm install --no-audit --no-optional --force && \
 RUN npm install --no-audit --no-optional
 
-
+RUN 
 
 
 
@@ -147,6 +152,8 @@ FROM foreman-ruby-builder as foreman-builder
 
 
 ARG HOME=/home/foreman
+
+
 
 WORKDIR ${HOME}
 
