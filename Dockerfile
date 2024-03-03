@@ -72,8 +72,13 @@ WORKDIR $HOME
 # COPY . ${HOME}/
 
 RUN echo ""; mkdir -p /tmp/app; \
-  git clone --depth=1 --branch 3.9.1 https://github.com/theforeman/foreman.git /tmp/app; \
-  rm -rf /tmp/app/.git; \
+  git clone --depth=1 --branch 3.9.1 https://github.com/theforeman/foreman.git /tmp/app;
+
+
+COPY Gemfile.local-amd64.rb /tmp/app/bundler.d/Gemfile.local.rb
+
+
+RUN rm -rf /tmp/app/.git; \
   cp -r /tmp/app/* ${HOME}/; \
   chown foreman:foreman -R ${HOME}/.; \
   chmod 770 -R ${HOME}/.; \
@@ -97,9 +102,6 @@ RUN bundle config set --local clean true
 RUN bundle config set --local jobs 5
 
 RUN bundle config set --local retry 3
-
-
-COPY Gemfile.local-amd64.rb ${HOME}/bundler.d/Gemfile.local.rb
 
 
 RUN bundle install && \
