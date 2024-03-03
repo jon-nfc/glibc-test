@@ -9,7 +9,8 @@ WORKDIR ${HOME}
 
 
 RUN apk add --no-cache \
-  git
+  git \
+  python
 
 RUN mkdir -p /tmp/app; \
   mkdir -p ${HOME}; \
