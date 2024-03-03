@@ -32,6 +32,10 @@ gem 'foreman_vault', :git => "https://github.com/dm-drogeriemarkt/foreman_vault.
 
 
 
+# May be required to link hosts to server.
+gem 'katello', :git => "https://github.com/Katello/katello.git", :branch => '4.11.1'
+
+
 # Not needed https://community.theforeman.org/t/external-ipam-core-feature-merged/17871
 # https://github.com/grizzthedj/foreman_ipam
 # gem 'foreman_ipam'
