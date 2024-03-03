@@ -156,6 +156,13 @@ COPY --from=builder ${HOME}/Gemfile.lock ${HOME}/Gemfile.lock
 
 COPY --from=builder ${HOME}/vendor/ruby ${HOME}/vendor/ruby
 
+
+COPY --from=builder ${HOME}/bundler.d/foreman_openscap_proxy.rb ${HOME}/bundler.d/foreman_openscap_proxy.rb
+
+COPY --from=builder ${HOME}/config/settings.yml ${HOME}/config/settings.yml
+
+COPY --from=builder ${HOME}/config/settings.d/openscap.yml ${HOME}/config/settings.d/openscap.yml
+
 # COPY --from=builder ${HOME}/public ${HOME}/public
 
 # RUN gem install rkerberos;
