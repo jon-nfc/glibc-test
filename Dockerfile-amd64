@@ -59,6 +59,10 @@ RUN bundle config set --local without "${BUNDLER_SKIPPED_GROUPS}" && \
   bundle config set --local path vendor && \
   bundle config set --local jobs 5 && \
   bundle config set --local retry 3
+
+
+COPY Gemfile.local-amd64.rb ${HOME}/bundler.d/Gemfile.local.rb
+
 RUN bundle install && \
   bundle binstubs --all && \
   rm -rf vendor/ruby/*/cache/*.gem && \
