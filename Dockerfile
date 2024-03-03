@@ -158,7 +158,7 @@ ARG HOME=/home/foreman
 WORKDIR ${HOME}
 
 
-COPY --from=foreman-node-builder ${HOME}/. ${HOME}/
+COPY --from=foreman-node-builder --chown=foreman:foreman ${HOME}/. ${HOME}/
 
 
 RUN ./node_modules/webpack/bin/webpack.js --config config/webpack.config.js
@@ -203,7 +203,7 @@ ENV RAILS_LOG_TO_STDOUT=true
 USER foreman
 WORKDIR ${HOME}
 # COPY --chown=foreman . ${HOME}/
-COPY --from=foreman-builder /tmp/app/. ${HOME}/
+COPY --from=foreman-builder --chown=foreman:foreman /tmp/app/. ${HOME}/
 # COPY --from=foreman-builder /usr/bin/entrypoint.sh /usr/bin/entrypoint.sh
 COPY --from=foreman-builder --chown=foreman:foreman ${HOME}/.bundle/config ${HOME}/.bundle/config
 COPY --from=foreman-builder --chown=foreman:foreman ${HOME}/Gemfile.lock ${HOME}/Gemfile.lock
