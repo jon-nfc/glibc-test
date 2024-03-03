@@ -220,7 +220,7 @@ RUN date -u > BUILD_TIME
 # RUN chmod +x /usr/bin/entrypoint.sh
 
 # ENTRYPOINT ["entrypoint.sh"]
-
+RUN bundle install
 
 # Start the main process.
 CMD "bundle exec bin/rails server"
