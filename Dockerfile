@@ -71,15 +71,15 @@ WORKDIR $HOME
 # COPY --chown=foreman . ${HOME}/
 # COPY . ${HOME}/
 
-RUN mkdir -p /tmp/app; \
+RUN echo ""; mkdir -p /tmp/app; \
   git clone --depth=1 --branch 3.9.1 https://github.com/theforeman/foreman.git /tmp/app; \
   rm -rf /tmp/app/.git; \
   cp -r /tmp/app/* ${HOME}/; \
-  chown foreman:foreman -R /tmp/app/.; \
+  chown foreman:foreman -R ${HOME}/.; \
   chmod 770 -R ${HOME}/.; \
   cd ${HOME};
 
-RUN ls -la;
+RUN echo ""; ls -la;
 
 USER foreman
 
