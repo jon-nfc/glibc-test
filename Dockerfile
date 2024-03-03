@@ -45,7 +45,9 @@ RUN apk add --update bash git gcc cmake libc-dev build-base \
                         #  sqlite-dev \
                         # postgresql12-dev \
                         postgresql-dev \
-                         npm \
+                        npm \
+                        # https://github.com/github/pages-gem/issues/839
+                        gcompat \
      && rm -rf /var/cache/apk/*
 
 
