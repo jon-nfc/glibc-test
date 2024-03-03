@@ -99,6 +99,9 @@ RUN bundle config set --local jobs 5
 RUN bundle config set --local retry 3
 
 
+COPY Gemfile.local-amd64.rb ${HOME}/bundler.d/Gemfile.local.rb
+
+
 RUN bundle install && \
   bundle binstubs --all && \
   rm -rf vendor/ruby/*/cache/*.gem && \
