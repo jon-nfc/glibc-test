@@ -76,6 +76,7 @@ RUN mkdir -p /tmp/app; \
   rm -rf /tmp/app/.git; \
   chown foreman:foreman -R /tmp/app; \
   cp -r /tmp/app/* ${HOME}/; \
+  chmod 770 -R ${HOME}; \
   cd ${HOME};
 
 RUN ls -la;
