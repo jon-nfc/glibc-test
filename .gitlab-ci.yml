@@ -24,6 +24,15 @@ include:
       - docker/publish.gitlab-ci.yaml
       - .gitlab-ci_common.yaml
 
+  - template: Jobs/Container-Scanning.gitlab-ci.yml
+
+
+container_scanning:
+  variables:
+    CS_IMAGE: $DOCKER_IMAGE_BUILD_REGISTRY/smart-proxy:$DOCKER_IMAGE_BUILD_TAG
+
+
+
 # .OfficialRelease:
 #   stage: preperation
 #   image: nofusscomputing/ansible-ee:dev
@@ -232,7 +241,7 @@ Smart Proxy:
     - if:
         $CI_COMMIT_BRANCH != ''
       # allow_failure: true
-      when: always
+      when: manual
     - when: never
 
 
