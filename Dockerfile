@@ -39,7 +39,7 @@ RUN adduser --home $HOME --system --shell /bin/false --ingroup foreman --gecos F
 
 
 
-FROM foreman-base-ruby as foreman-builder
+FROM foreman-base-ruby as foreman-ruby-builder
 RUN apk add --update bash git gcc cmake libc-dev build-base \
                          curl-dev libxml2-dev gettext \
                         #  sqlite-dev \
@@ -110,14 +110,14 @@ RUN bundle exec rake assets:clean assets:precompile
 
 
 
-FROM node:14.0.0-alpine3.11 as node-builder
+FROM node:14.0.0-alpine3.11 as foreman-node-builder
 
 
 ARG HOME=/home/foreman
 
 WORKDIR ${HOME}
 # COPY --chown=foreman . ${HOME}/
-COPY --from=foreman-builder /tmp/app/. ${HOME}/
+COPY --from=foreman-ruby-builder ${HOME}/. ${HOME}/
 
 
 # ^4.5.0 to low for node 14. https://www.npmjs.com/package/node-sass
@@ -127,16 +127,31 @@ COPY --from=foreman-builder /tmp/app/. ${HOME}/
 # this line was test. removing to revert
 # RUN npm install --no-audit --no-optional --legacy-peer-deps && \
 # RUN npm install --no-audit --no-optional --force && \
-RUN npm install --no-audit --no-optional && \
-  ./node_modules/webpack/bin/webpack.js --config config/webpack.config.js && \
+RUN npm install --no-audit --no-optional
+
+
+
+
+
+FROM foreman-ruby-builder as foreman-builder
+
+
+ARG HOME=/home/foreman
+
+WORKDIR ${HOME}
+
+
+COPY --from=foreman-node-builder ${HOME}/. ${HOME}/
+
+
+RUN ./node_modules/webpack/bin/webpack.js --config config/webpack.config.js
+
 # cleanups
-  rm -rf public/webpack/stats.json ./node_modules vendor/ruby/*/cache vendor/ruby/*/gems/*/node_modules bundler.d/nulldb.rb db/schema.rb && \
-  bundle config without "${BUNDLER_SKIPPED_GROUPS} assets" && \
-  bundle install
+RUN rm -rf public/webpack/stats.json ./node_modules vendor/ruby/*/cache vendor/ruby/*/gems/*/node_modules bundler.d/nulldb.rb db/schema.rb
 
+RUN bundle config without "${BUNDLER_SKIPPED_GROUPS} assets"
 
-
-
+RUN bundle install
 
 # Adding missing gems, for tzdata see https://bugzilla.redhat.com/show_bug.cgi?id=1611117
 # RUN echo gem '"rdoc"' > bundler.d/container.rb && echo gem '"tzinfo-data"' >> bundler.d/container.rb
