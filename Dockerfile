@@ -115,6 +115,13 @@ FROM node:14.0.0-alpine3.11 as foreman-node-builder
 
 ARG HOME=/home/foreman
 
+RUN apk add --no-cache \
+    git \
+    python \
+    alpine-sdk \
+    libffi-dev
+
+
 WORKDIR ${HOME}
 # COPY --chown=foreman . ${HOME}/
 COPY --from=foreman-ruby-builder ${HOME}/. ${HOME}/
