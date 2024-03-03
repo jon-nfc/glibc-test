@@ -104,9 +104,9 @@ RUN mv -v db/schema.rb.nulldb db/schema.rb
 
 RUN bundle exec rake assets:clean assets:precompile
 
-# # ^4.5.0 to low for node 14. https://www.npmjs.com/package/node-sass
-# RUN sed -E 's/"node-sass": (.+)/"node-sass": "~4.14",/g' -i ${HOME}/package.json; \
-#   cat ${HOME}/package.json;
+# ^4.5.0 to low for node 14. https://www.npmjs.com/package/node-sass
+RUN sed -E 's/"node-sass": (.+)/"node-sass": "~4.14",/g' -i ${HOME}/package.json; \
+  cat ${HOME}/package.json;
 
 # this line was test. removing to revert
 # RUN npm install --no-audit --no-optional --legacy-peer-deps && \
