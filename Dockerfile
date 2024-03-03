@@ -18,7 +18,10 @@ ENV FOREMAN_DOMAIN kstm.lab.net
 
 ARG HOME=/home/foreman
 WORKDIR $HOME
-ENV BUNDLE_APP_CONFIG='${home}/vendor/bundle'
+# ENV BUNDLE_APP_CONFIG='${home}/vendor/bundle'
+
+ENV BUNDLE_APP_CONFIG '/home/foreman/.bundler/config'
+ENV GEM_HOME "${HOME}/vendor/ruby/2.7.0"
 
 
 RUN bundle config set --local without "${BUNDLER_SKIPPED_GROUPS}"; \
