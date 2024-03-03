@@ -48,8 +48,11 @@ RUN apk add --update bash git gcc cmake libc-dev build-base \
                         npm \
                         # https://github.com/github/pages-gem/issues/839
                         gcompat \
+                        # build fail couldnt find python3 in '/usr/bin/python3' https://github.com/jon-nfc/glibc-test/actions/runs/8127320703/job/22212022669
+                        python3 \
      && rm -rf /var/cache/apk/*
 
+RUN which python3 || true
 
 ENV RAILS_ENV production
 ENV FOREMAN_APIPIE_LANGS en
