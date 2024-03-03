@@ -161,7 +161,7 @@ RUN date -u > BUILD_TIME
 
 # RUN chmod +x /usr/bin/entrypoint.sh
 
-ENTRYPOINT ["entrypoint.sh"]
+# ENTRYPOINT ["entrypoint.sh"]
 
 
 # Start the main process.
