@@ -221,9 +221,11 @@ COPY --from=foreman-builder --chown=foreman:foreman ${HOME}/public ${HOME}/publi
 RUN date -u > BUILD_TIME
 
 # RUN cp ${HOME}/extras/containers/entrypoint.sh /usr/bin/; 
-
+USER 0
 # RUN chmod +x /usr/bin/entrypoint.sh
+RUN apk add libc6-compat
 
+USER foreman
 # ENTRYPOINT ["entrypoint.sh"]
 RUN bundle install
 
