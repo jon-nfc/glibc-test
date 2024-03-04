@@ -93,24 +93,26 @@ RUN cp -r /tmp/app/* ${HOME}/; \
 ENV BUNDLER_SKIPPED_GROUPS="test development"
 
 
-RUN bundle config set --local without "${BUNDLER_SKIPPED_GROUPS}"; \
-  bundle config set --local clean true; \
-  bundle config set --local path vendor; \
-  bundle config set --local jobs 5; \
-  bundle config set --local retry 3;
+RUN bundle config set --local without "${BUNDLER_SKIPPED_GROUPS}";
+#   bundle config set --local clean true; \
+#   bundle config set --local path vendor; \
+#   bundle config set --local jobs 5; \
+#   bundle config set --local retry 3;
 
+ENV BUNDLE_APP_CONFIG="/usr/local/bundle"
 
 RUN bundle install;
 
+RUN ls -la /usr/local/bundle
 
-RUN bundle binstubs --all; \
-  rm -rf vendor/ruby/*/cache/*.gem; \
-  find vendor/ruby/*/gems -name "*.c" -delete; \
-  find vendor/ruby/*/gems -name "*.o" -delete
+RUN bundle binstubs --all; 
+  # rm -rf vendor/ruby/*/cache/*.gem; \
+  # find vendor/ruby/*/gems -name "*.c" -delete; \
+  # find vendor/ruby/*/gems -name "*.o" -delete
 
 
-RUN rm -rf vendor/ruby/*/cache vendor/ruby/*/gems/*/node_modules bundler.d/nulldb.rb db/schema.rb; \
-  bundle install
+# RUN rm -rf vendor/ruby/*/cache vendor/ruby/*/gems/*/node_modules bundler.d/nulldb.rb db/schema.rb; \
+#   bundle install
 
 RUN ls -la;
 
@@ -122,6 +124,7 @@ RUN ls -la;
 ##########################################################################
 FROM foreman-base as application
 
+ENV BUNDLE_APP_CONFIG="/usr/local/bundle"
 
 ARG USER_GROUP_ID $USER_GROUP_ID
 
@@ -137,7 +140,10 @@ COPY --from=foreman-builder --chown=${USER_GROUP_ID}:${USER_GROUP_ID} ${HOME}/co
 
 COPY --from=foreman-builder --chown=${USER_GROUP_ID}:${USER_GROUP_ID} ${HOME}/Gemfile.lock ${HOME}/Gemfile.lock
 
-COPY --from=foreman-builder --chown=${USER_GROUP_ID}:${USER_GROUP_ID} ${HOME}/vendor/ruby ${HOME}/vendor/ruby
+# COPY --from=foreman-builder --chown=${USER_GROUP_ID}:${USER_GROUP_ID} ${HOME}/vendor/ruby ${HOME}/vendor/ruby
 
+COPY --from=foreman-builder --chown=${USER_GROUP_ID}:${USER_GROUP_ID} /usr/local/bundle /usr/local/bundle
+
+RUN apk add libc6-compat
 
 CMD bundle exec bin/smart-proxy
