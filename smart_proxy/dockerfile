@@ -143,7 +143,7 @@ COPY --from=foreman-builder --chown=${USER_GROUP_ID}:${USER_GROUP_ID} ${HOME}/Ge
 # COPY --from=foreman-builder --chown=${USER_GROUP_ID}:${USER_GROUP_ID} ${HOME}/vendor/ruby ${HOME}/vendor/ruby
 
 COPY --from=foreman-builder --chown=${USER_GROUP_ID}:${USER_GROUP_ID} /usr/local/bundle /usr/local/bundle
-
+USER 0
 RUN apk add libc6-compat
-
+USER $USER_GROUP_ID
 CMD bundle exec bin/smart-proxy
