@@ -44,6 +44,8 @@ gem 'foreman_git_templates', :git => "https://github.com/dm-drogeriemarkt/forema
 #gem 'foreman_git_templates', :git => "https://github.com/dm-drogeriemarkt/foreman_git_templates.git", :branch => '1.0.6'
 
 
+# https://docs.theforeman.org/3.0/Managing_Hosts/index-foreman-el.html#Synchronizing_Templates_Repositories
+gem 'foreman_templates', :git => "https://github.com/theforeman/foreman_templates.git", :branch => 'v9.4.0'
 
 
 
