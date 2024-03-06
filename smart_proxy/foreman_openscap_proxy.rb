@@ -56,5 +56,5 @@ gem 'smart_proxy_dns_powerdns', :git => "https://github.com/theforeman/smart_pro
 # possibly broken https://github.com/adamruzicka/foreman_probing/issues/9
 # gem 'smart-proxy-probing', :git => "https://github.com/adamruzicka/smart-proxy-probing.git", :branch => 'v0.0.4'
 
-gem 'smart_proxy_remote_execution_ssh', :git => "https://github.com/theforeman/foreman_remote_execution.git", :branch => 'v0.10.4'
+gem 'smart_proxy_remote_execution_ssh', :git => "https://github.com/theforeman/smart_proxy_remote_execution_ssh.git", :branch => 'v0.10.4'
 
