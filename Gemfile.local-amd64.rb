@@ -51,6 +51,8 @@ gem 'foreman_templates', :git => "https://github.com/theforeman/foreman_template
 # possibly broken https://github.com/adamruzicka/foreman_probing/issues/9
 # gem 'foreman_probing', :git => "https://github.com/adamruzicka/foreman_probing.git", :branch => 'v0.0.4'
 
+gem 'foreman-tasks', :git => "https://github.com/theforeman/foreman-tasks.git", :branch => 'v9.1.0'
+
 gem 'foreman_remote_execution', :git => "https://github.com/theforeman/foreman_remote_execution.git", :branch => 'v12.0.5'
 
 
