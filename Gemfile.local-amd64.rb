@@ -48,7 +48,8 @@ gem 'foreman_git_templates', :git => "https://github.com/dm-drogeriemarkt/forema
 gem 'foreman_templates', :git => "https://github.com/theforeman/foreman_templates.git", :branch => 'v9.4.0'
 
 
-gem 'foreman_probing', :git => "https://github.com/adamruzicka/foreman_probing.git", :branch => 'v0.0.4'
+# possibly broken https://github.com/adamruzicka/foreman_probing/issues/9
+# gem 'foreman_probing', :git => "https://github.com/adamruzicka/foreman_probing.git", :branch => 'v0.0.4'
 
 gem 'foreman_remote_execution', :git => "https://github.com/theforeman/foreman_remote_execution.git", :branch => 'v12.0.5'
 
