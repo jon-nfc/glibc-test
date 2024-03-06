@@ -11,8 +11,8 @@ ARG SMART_PROXY_TAG=3.9.1
 #    Base
 #
 ##########################################################################
-FROM ruby:2.7-alpine3.16 as foreman-base
-
+# FROM ruby:2.7-alpine3.16 as foreman-base
+FROM ruby:3.0.0-alpine as foreman-base
 
 ARG USER_NAME $USER_NAME
 
