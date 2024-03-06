@@ -50,3 +50,11 @@ gem 'smart_proxy_ipam', :git => "https://github.com/grizzthedj/smart_proxy_ipam.
 gem 'smart_proxy_discovery', :git => "https://github.com/theforeman/smart_proxy_discovery.git", :branch => '1.0.5'
 
 gem 'smart_proxy_dns_powerdns', :git => "https://github.com/theforeman/smart_proxy_dns_powerdns.git", :branch => '1.0.0'
+
+
+##### new
+# possibly broken https://github.com/adamruzicka/foreman_probing/issues/9
+# gem 'smart-proxy-probing', :git => "https://github.com/adamruzicka/smart-proxy-probing.git", :branch => 'v0.0.4'
+
+gem 'smart_proxy_remote_execution_ssh', :git => "https://github.com/theforeman/foreman_remote_execution.git", :branch => 'v0.10.4
+

@@ -37,7 +37,10 @@ RUN export; \
   addgroup -g ${USER_GROUP_ID} -S foreman; \
   adduser -S -h ${HOME} -u ${USER_GROUP_ID} -G foreman foreman; \
   chown 0:${USER_GROUP_ID} /var/log; \
-  chmod 770 /var/log
+  chmod 770 /var/log; \
+  apk update --no-cache; \
+  apk add --no-cache \
+    nmap;
 
 
 WORKDIR $HOME
