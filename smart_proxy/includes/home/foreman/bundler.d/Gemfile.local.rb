@@ -62,8 +62,8 @@ gem 'smart_proxy_dns_powerdns', :git => "https://github.com/theforeman/smart_pro
 
 
 # dynflow crashes on arm try build
-# gem 'sqlite3', git: "https://github.com/larskanis/sqlite3-ruby", branch: "add-gemspec"
-gem 'sqlite3', platform: :ruby
+gem 'sqlite3', git: "https://github.com/sparklemotion/sqlite3-ruby.git", branch: "v1.7.2"
+# gem 'sqlite3', platform: :ruby
 
 gem 'smart_proxy_dynflow', :git => 'https://github.com/theforeman/smart_proxy_dynflow.git', :branch => 'v0.9.2'
 # gem 'smart_proxy_dynflow_core', :git => 'https://github.com/theforeman/smart_proxy_dynflow.git', :branch => 'v0.9.2'
