@@ -113,6 +113,7 @@ RUN bundle binstubs --all;
   # find vendor/ruby/*/gems -name "*.c" -delete; \
   # find vendor/ruby/*/gems -name "*.o" -delete
 
+RUN gem install facter
 
 # RUN rm -rf vendor/ruby/*/cache vendor/ruby/*/gems/*/node_modules bundler.d/nulldb.rb db/schema.rb; \
 #   bundle install
