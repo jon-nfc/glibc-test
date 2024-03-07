@@ -93,7 +93,7 @@ RUN cp -r /tmp/app/* ${HOME}/; \
   chmod 770 -R ${HOME}/.;
 
 
-ENV BUNDLER_SKIPPED_GROUPS="test development"
+ENV BUNDLER_SKIPPED_GROUPS="development"
 
 
 RUN bundle config set --local without "${BUNDLER_SKIPPED_GROUPS}";
