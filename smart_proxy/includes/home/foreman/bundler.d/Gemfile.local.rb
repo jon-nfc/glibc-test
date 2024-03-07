@@ -60,7 +60,7 @@ gem 'smart_proxy_dns_powerdns', :git => "https://github.com/theforeman/smart_pro
 
 gem 'smart_proxy_dynflow', :git => 'https://github.com/theforeman/smart_proxy_dynflow.git', :branch => 'v0.9.2'
 # gem 'smart_proxy_dynflow_core', :git => 'https://github.com/theforeman/smart_proxy_dynflow.git', :branch => 'v0.9.2'
-gem 'foreman_remote_execution_core', :git => 'https://github.com/theforeman/foreman_remote_execution.git', :branch => 'v12.0.5'
+gem 'foreman_remote_execution', :git => 'https://github.com/theforeman/foreman_remote_execution.git', :branch => 'v12.0.5'
 gem 'smart_proxy_remote_execution_ssh', :git => "https://github.com/theforeman/smart_proxy_remote_execution_ssh.git", :branch => 'v0.10.4'
 
 
