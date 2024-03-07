@@ -58,3 +58,4 @@ gem 'smart_proxy_dns_powerdns', :git => "https://github.com/theforeman/smart_pro
 
 gem 'smart_proxy_remote_execution_ssh', :git => "https://github.com/theforeman/smart_proxy_remote_execution_ssh.git", :branch => 'v0.10.4'
 
+gem 'facter'
