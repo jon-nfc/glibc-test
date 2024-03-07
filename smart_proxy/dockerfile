@@ -71,6 +71,7 @@ RUN apk add \
     libffi-dev \
     ruby-dev \
     ruby-rake \
+    sqlite-dev \
     git;
 
 
