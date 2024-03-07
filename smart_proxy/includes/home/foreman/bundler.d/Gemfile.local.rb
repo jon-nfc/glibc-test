@@ -58,7 +58,7 @@ gem 'smart_proxy_dns_powerdns', :git => "https://github.com/theforeman/smart_pro
 
 
 # dynflow stack trace no method named deprecator
-gem 'deprecator'
+# gem 'deprecator'
 
 gem 'smart_proxy_dynflow', :git => 'https://github.com/theforeman/smart_proxy_dynflow.git', :branch => 'v0.9.2'
 # gem 'smart_proxy_dynflow_core', :git => 'https://github.com/theforeman/smart_proxy_dynflow.git', :branch => 'v0.9.2'

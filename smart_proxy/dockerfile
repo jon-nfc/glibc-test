@@ -105,6 +105,8 @@ RUN bundle config set --local without "${BUNDLER_SKIPPED_GROUPS}";
 
 ENV BUNDLE_APP_CONFIG="/usr/local/bundle"
 
+RUN gem install activesupport --version "<7.0"
+
 RUN bundle install;
 
 RUN ls -la /usr/local/bundle
