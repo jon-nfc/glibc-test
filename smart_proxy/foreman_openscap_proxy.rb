@@ -57,3 +57,8 @@ gem 'smart_proxy_dns_powerdns', :git => "https://github.com/theforeman/smart_pro
 # gem 'smart-proxy-probing', :git => "https://github.com/adamruzicka/smart-proxy-probing.git", :branch => 'v0.0.4'
 
 gem 'smart_proxy_remote_execution_ssh', :git => "https://github.com/theforeman/smart_proxy_remote_execution_ssh.git", :branch => 'v0.10.4'
+
+
+group :facter do
+    gem 'facter'
+end
