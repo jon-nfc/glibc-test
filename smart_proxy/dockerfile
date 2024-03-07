@@ -35,11 +35,15 @@ ENV BUNDLE_APP_CONFIG='/home/foreman/.bundle'
 
 RUN export; \
   addgroup -g ${USER_GROUP_ID} -S foreman; \
-  adduser -S -h ${HOME} -u ${USER_GROUP_ID} -G foreman foreman; \
-  chown 0:${USER_GROUP_ID} /var/log; \
+  adduser -S -h ${HOME} -u ${USER_GROUP_ID} -G foreman foreman;
+
+COPY includes/ /
+
+RUN chown 0:${USER_GROUP_ID} /var/log; \
   chmod 770 /var/log; \
   apk update --no-cache; \
   apk add --no-cache \
+    libc6-compat \
     nmap;
 
 
@@ -87,7 +91,7 @@ RUN export; echo "${SMART_PROXY_VERSION}"; git clone --depth=1 --branch ${SMART_
 
 # COPY --chown=${USER_GROUP_ID}:${USER_GROUP_ID} openscap_settings.yml /tmp/app/config/settings.d/openscap.yml
 
-COPY includes/ /
+# COPY includes/ /
 
 RUN cp -r /tmp/app/* ${HOME}/; \
   chown -R ${USER_GROUP_ID}:${USER_GROUP_ID} ${HOME}/.; \
@@ -150,14 +154,12 @@ COPY --from=foreman-builder --chown=${USER_GROUP_ID}:${USER_GROUP_ID} ${HOME}/Ge
 
 COPY --from=foreman-builder --chown=${USER_GROUP_ID}:${USER_GROUP_ID} /usr/local/bundle /usr/local/bundle
 
-COPY includes/ /
-
 RUN gem install facter
 
-USER 0
+# USER 0
 
-RUN apk add libc6-compat
+# # RUN apk add libc6-compat;
 
-USER $USER_GROUP_ID
+# USER $USER_GROUP_ID
 
 CMD bundle exec bin/smart-proxy

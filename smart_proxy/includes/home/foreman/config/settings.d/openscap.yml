@@ -1,21 +1,17 @@
 
-# cat <<'EOF' > ${HOME}/config/settings.d/openscap.yml
 ---
 :enabled: true
 
 # Log file for the forwarding script.
-:openscap_send_log_file: /var/log/foreman-proxy/openscap-send.log
+:openscap_send_log_file: /var/log/openscap-send.log
 
 # Directory where OpenSCAP audits are stored
 # before they are forwarded to Foreman
-:spooldir: /var/spool/foreman-proxy/openscap
+:spooldir: ~/.foreman-openscap/spool
 
 # Directory where OpenSCAP content XML are stored
 # So we will not request the XML from Foreman each time
-:contentdir: /var/lib/openscap/content
+:contentdir: ~/.foreman-openscap/content
 # Directory where OpenSCAP report XML are stored
 # So Foreman can request arf xml reports
-:reportsdir: /usr/share/foreman-proxy/openscap/content
-
-# EOF
-
+:reportsdir: ~/.foreman-openscap/reports
