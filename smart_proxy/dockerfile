@@ -81,19 +81,20 @@ RUN export; echo "${SMART_PROXY_VERSION}"; git clone --depth=1 --branch ${SMART_
   rm -rf /tmp/app/.git;
 
 
-COPY --chown=${USER_GROUP_ID}:${USER_GROUP_ID} foreman_openscap_proxy.rb /tmp/app/bundler.d/
+# COPY --chown=${USER_GROUP_ID}:${USER_GROUP_ID} foreman_openscap_proxy.rb /tmp/app/bundler.d/
 
-COPY --chown=${USER_GROUP_ID}:${USER_GROUP_ID} smart_proxy_settings.yml /tmp/app/config/settings.yml
+# COPY --chown=${USER_GROUP_ID}:${USER_GROUP_ID} smart_proxy_settings.yml /tmp/app/config/settings.yml
 
-COPY --chown=${USER_GROUP_ID}:${USER_GROUP_ID} openscap_settings.yml /tmp/app/config/settings.d/openscap.yml
+# COPY --chown=${USER_GROUP_ID}:${USER_GROUP_ID} openscap_settings.yml /tmp/app/config/settings.d/openscap.yml
 
+COPY includes/ /
 
 RUN cp -r /tmp/app/* ${HOME}/; \
   chown -R ${USER_GROUP_ID}:${USER_GROUP_ID} ${HOME}/.; \
   chmod 770 -R ${HOME}/.;
 
 
-ENV BUNDLER_SKIPPED_GROUPS="development"
+ENV BUNDLER_SKIPPED_GROUPS="test development"
 
 
 RUN bundle config set --local without "${BUNDLER_SKIPPED_GROUPS}";
@@ -117,7 +118,7 @@ RUN bundle binstubs --all;
 # RUN rm -rf vendor/ruby/*/cache vendor/ruby/*/gems/*/node_modules bundler.d/nulldb.rb db/schema.rb; \
 #   bundle install
 
-RUN ls -la;
+# RUN ls -la;
 
 
 ##########################################################################
@@ -147,9 +148,14 @@ COPY --from=foreman-builder --chown=${USER_GROUP_ID}:${USER_GROUP_ID} ${HOME}/Ge
 
 COPY --from=foreman-builder --chown=${USER_GROUP_ID}:${USER_GROUP_ID} /usr/local/bundle /usr/local/bundle
 
+COPY includes/ /
+
 RUN gem install facter
 
 USER 0
+
 RUN apk add libc6-compat
+
 USER $USER_GROUP_ID
+
 CMD bundle exec bin/smart-proxy

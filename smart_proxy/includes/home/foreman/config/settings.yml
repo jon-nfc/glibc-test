@@ -14,7 +14,7 @@
 
 
 :http_port: 8000  
-# :https_port: 8443
+:https_port: 8443
  
 # :ssl_certificate: ssl/certs/fqdn.pem
 # :ssl_ca_file: ssl/certs/ca.pem
