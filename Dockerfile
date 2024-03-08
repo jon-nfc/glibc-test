@@ -1,9 +1,9 @@
 # Base container that is used for both building and running the app
 # ref: https://github.com/ohadlevy/foreman/blob/8995cba7c7c6f95e4f3ef55bee435254f2e8cc24/Dockerfile
-#FROM ruby:2.7-alpine3.14 as foreman-base-ruby
+FROM ruby:2.7-alpine3.14 as foreman-base-ruby
 
 # test ansible plugin
-FROM ruby:2.7.8-alpine3.16 as foreman-base-ruby
+# FROM ruby:2.7.8-alpine3.16 as foreman-base-ruby
 
 
 ENV RAILS_ENV production
@@ -60,7 +60,7 @@ RUN apk add --update bash git gcc cmake libc-dev build-base \
                         # build fail couldnt find python3 in '/usr/bin/python3' https://github.com/jon-nfc/glibc-test/actions/runs/8127320703/job/22212022669
                         python3 \
                         # Try python 2 in an attempt to fix 'Syntax Error: Command failed: /usr/bin/python3 -c import sys; print "%s.%s.%s" % sys.version_info[:3];'
-                        #python2 \
+                        python2 \
      && rm -rf /var/cache/apk/*
 
 RUN which python3 || true
@@ -129,9 +129,9 @@ RUN bundle exec rake assets:clean assets:precompile
 
 
 
-#FROM node:14.0.0-alpine3.11 as foreman-node-builder
+FROM node:14.0.0-alpine3.11 as foreman-node-builder
 # Ansible plugin test
-FROM node:16.20.2-alpine3.17 as foreman-node-builder
+# FROM node:16.20.2-alpine3.17 as foreman-node-builder
 
 ARG HOME=/home/foreman
 
@@ -139,7 +139,7 @@ ARG HOME=/home/foreman
 
 RUN apk add --no-cache \
     git \
-    python3 \
+    python \
     alpine-sdk \
     libffi-dev
 
@@ -158,7 +158,7 @@ COPY --from=foreman-ruby-builder --chown=foreman:foreman ${HOME}/. ${HOME}/
 # RUN npm install --no-audit --no-optional --legacy-peer-deps && \
 # RUN npm install --no-audit --no-optional --force && \
 
-RUN npm i react-json-tree --legacy-peer-deps
+# RUN npm i react-json-tree --legacy-peer-deps
 
 RUN npm install --no-audit --no-optional --legacy-peer-deps
 
