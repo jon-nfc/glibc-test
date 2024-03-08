@@ -158,7 +158,7 @@ COPY --from=foreman-ruby-builder --chown=foreman:foreman ${HOME}/. ${HOME}/
 # RUN npm install --no-audit --no-optional --legacy-peer-deps && \
 # RUN npm install --no-audit --no-optional --force && \
 
-RUN npm i react-json-tree --no-audit --no-optional --legacy-peer-deps
+RUN npm i react-json-tree@0.11.0 --no-audit --no-optional --legacy-peer-deps
 
 RUN npm install --no-audit --no-optional --legacy-peer-deps
 
