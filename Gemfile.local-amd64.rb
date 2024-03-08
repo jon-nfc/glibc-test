@@ -56,6 +56,7 @@ gem 'foreman-tasks', :git => "https://github.com/theforeman/foreman-tasks.git", 
 gem 'foreman_remote_execution', :git => "https://github.com/theforeman/foreman_remote_execution.git", :branch => 'v12.0.5'
 
 
+gem 'foreman_ansible', :git => "https://github.com/theforeman/foreman_ansible.git", :branch => 'v13.0.3'
 
 
 
