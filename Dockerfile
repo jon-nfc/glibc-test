@@ -1,8 +1,14 @@
 # Base container that is used for both building and running the app
 # ref: https://github.com/ohadlevy/foreman/blob/8995cba7c7c6f95e4f3ef55bee435254f2e8cc24/Dockerfile
-FROM ruby:2.7-alpine3.14 as foreman-base-ruby
+#FROM ruby:2.7-alpine3.14 as foreman-base-ruby
+
+# test ansible plugin
+FROM ruby:2.7.8-alpine3.16 as foreman-base-ruby
 
 
+ENV RAILS_ENV production
+ENV RAILS_SERVE_STATIC_FILES true
+ENV RAILS_LOG_TO_STDOUT true
 
 RUN apk add -U \
   # tzdata \
@@ -59,9 +65,11 @@ RUN apk add --update bash git gcc cmake libc-dev build-base \
 
 RUN which python3 || true
 
-ENV RAILS_ENV production
+
+
+# ENV RAILS_ENV production
 ENV FOREMAN_APIPIE_LANGS en
-ENV BUNDLER_SKIPPED_GROUPS "test development openid libvirt journald facter console"
+ENV BUNDLER_SKIPPED_GROUPS "test development openid libvirt journald console"
 # ENV DATABASE_URL=sqlite3:tmp/bootstrap-db.sql
 ENV DATABASE_URL=nulldb://nohost
 # ENV BUNDLE_APP_CONFIG=''
@@ -121,8 +129,9 @@ RUN bundle exec rake assets:clean assets:precompile
 
 
 
-FROM node:14.0.0-alpine3.11 as foreman-node-builder
-
+#FROM node:14.0.0-alpine3.11 as foreman-node-builder
+# Ansible plugin test
+FROM node:16.20.2-alpine3.17 as foreman-node-builder
 
 ARG HOME=/home/foreman
 
