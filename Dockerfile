@@ -60,7 +60,7 @@ RUN apk add --update bash git gcc cmake libc-dev build-base \
                         # build fail couldnt find python3 in '/usr/bin/python3' https://github.com/jon-nfc/glibc-test/actions/runs/8127320703/job/22212022669
                         python3 \
                         # Try python 2 in an attempt to fix 'Syntax Error: Command failed: /usr/bin/python3 -c import sys; print "%s.%s.%s" % sys.version_info[:3];'
-                        python2 \
+                        #python2 \
      && rm -rf /var/cache/apk/*
 
 RUN which python3 || true
