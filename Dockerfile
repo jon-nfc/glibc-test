@@ -139,7 +139,7 @@ ARG HOME=/home/foreman
 
 RUN apk add --no-cache \
     git \
-    python \
+    python3 \
     alpine-sdk \
     libffi-dev
 
