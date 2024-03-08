@@ -148,9 +148,9 @@ COPY --from=foreman-ruby-builder --chown=foreman:foreman ${HOME}/. ${HOME}/
 # this line was test. removing to revert
 # RUN npm install --no-audit --no-optional --legacy-peer-deps && \
 # RUN npm install --no-audit --no-optional --force && \
-RUN npm install --no-audit --no-optional
+RUN npm install --no-audit --no-optional --legacy-peer-deps
 
-RUN 
+# RUN 
 
 
 
