@@ -5,7 +5,7 @@ FROM ruby:2.7-alpine3.14 as foreman-base-ruby
 # test ansible plugin
 # FROM ruby:2.7.8-alpine3.16 as foreman-base-ruby
 
-ENV changeme so_no_cache
+ENV changeme so_no_cache1
 
 ENV RAILS_ENV production
 ENV RAILS_SERVE_STATIC_FILES true
