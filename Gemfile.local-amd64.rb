@@ -63,7 +63,7 @@ gem 'foreman_puppet', :git => "https://github.com/theforeman/foreman_puppet.git"
 
 
 # May be required to link hosts to server. nope. read debian guide
-# gem 'katello', :git => "https://github.com/Katello/katello.git", :branch => '4.11.1'
+gem 'katello', :git => "https://github.com/Katello/katello.git", :branch => '4.11.0'
 
 # # only for icinga2
 # #gem 'foreman_monitoring'
