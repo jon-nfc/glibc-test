@@ -58,6 +58,8 @@ gem 'foreman_remote_execution', :git => "https://github.com/theforeman/foreman_r
 
 gem 'foreman_ansible', :git => "https://github.com/theforeman/foreman_ansible.git", :branch => 'v13.0.3'
 
+gem 'foreman_puppet', :git => "https://github.com/theforeman/foreman_puppet.git", :branch => 'v6.2.0'
+
 
 
 # May be required to link hosts to server. nope. read debian guide
