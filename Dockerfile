@@ -161,6 +161,11 @@ COPY --from=foreman-ruby-builder --chown=foreman:foreman ${HOME}/. ${HOME}/
 
 RUN npm i react-json-tree@0.11.0 --no-audit --no-optional --legacy-peer-deps
 
+# katello deps
+RUN npm i ngreact@0.5.0 --no-audit --no-optional --legacy-peer-deps
+RUN npm i use-deep-compare-effect@1.6.1 --no-audit --no-optional --legacy-peer-deps
+
+
 RUN npm install --no-audit --no-optional --legacy-peer-deps
 
 # RUN 
