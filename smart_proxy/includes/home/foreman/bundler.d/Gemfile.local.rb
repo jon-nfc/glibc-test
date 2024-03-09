@@ -73,7 +73,7 @@ gem 'smart_proxy_remote_execution_ssh', :git => "https://github.com/theforeman/s
 
 gem 'smart_proxy_ansible', :git => "https://github.com/theforeman/smart_proxy_ansible.git", :branch => 'v3.5.5'
 
-gem 'foreman_host_reports', :git => "https://github.com/theforeman/foreman_host_reports.git", :branch => '1.0.2'
+gem 'smart_proxy_reports', :git => "https://github.com/theforeman/smart_proxy_reports.git", :branch => '1.0.0'
 
 
 # required for facts
