@@ -232,7 +232,7 @@ RUN git clone \
     --depth=1 \
     --branch=0.0.2 \
     https://github.com/theforeman/postgresql-evr.git \
-    postgresql-evr install; \
+    postgresql-evr; \
   make -C postgresql-evr install
 
 
