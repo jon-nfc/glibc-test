@@ -228,6 +228,8 @@ RUN bundle install
 
 FROM foreman-ruby-builder as evr-builder
 
+RUN apk update; apk add git make postgresql-dev;
+
 RUN git clone \
     --depth=1 \
     --branch=0.0.2 \
