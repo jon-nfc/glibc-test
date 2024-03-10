@@ -226,16 +226,16 @@ RUN bundle install
 
 # RUN rm -rf vendor/ruby/*/cache vendor/ruby/*/gems/*/node_modules
 
-FROM foreman-ruby-builder as evr-builder
+# FROM foreman-ruby-builder as evr-builder
 
-RUN apk update; apk add git make postgresql-dev;
+# RUN apk update; apk add git make postgresql-dev;
 
-RUN git clone \
-    --depth=1 \
-    --branch=0.0.2 \
-    https://github.com/theforeman/postgresql-evr.git \
-    postgresql-evr; \
-  make -C postgresql-evr install
+# RUN git clone \
+#     --depth=1 \
+#     --branch=0.0.2 \
+#     https://github.com/theforeman/postgresql-evr.git \
+#     postgresql-evr; \
+#   make -C postgresql-evr install
 
 
 
@@ -256,7 +256,7 @@ COPY --from=foreman-builder --chown=foreman:foreman ${HOME}/.bundle/config ${HOM
 COPY --from=foreman-builder --chown=foreman:foreman ${HOME}/Gemfile.lock ${HOME}/Gemfile.lock
 COPY --from=foreman-builder --chown=foreman:foreman ${HOME}/vendor/ruby ${HOME}/vendor/ruby
 COPY --from=foreman-builder --chown=foreman:foreman ${HOME}/public ${HOME}/public
-COPY --from=evr-builder /usr/share/postgresql/extension /usr/share/postgresql/extension
+# COPY --from=evr-builder /usr/share/postgresql/extension /usr/share/postgresql/12/extension
 
 # RUN echo gem '"rdoc"' > bundler.d/container.rb && echo gem '"tzinfo-data"' >> bundler.d/container.rb
 
