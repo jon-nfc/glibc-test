@@ -162,15 +162,15 @@ COPY --from=foreman-ruby-builder --chown=foreman:foreman ${HOME}/. ${HOME}/
 RUN npm i react-json-tree@0.11.0 --no-audit --no-optional --legacy-peer-deps
 
 # katello deps
-RUN npm i \
-    ngreact@0.5.0 \
-    angular@1.8.2 \
-    bootstrap-select@1.13.18 \
-    ngreact@0.5.0 \
-    query-string@6.1.0 \
-    react-bootstrap@0.32.1 \
-    use-deep-compare-effect@1.6.1 \
-    --no-audit --no-optional --legacy-peer-deps
+# RUN npm i \
+#     ngreact@0.5.0 \
+#     angular@1.8.2 \
+#     bootstrap-select@1.13.18 \
+#     ngreact@0.5.0 \
+#     query-string@6.1.0 \
+#     react-bootstrap@0.32.1 \
+#     use-deep-compare-effect@1.6.1 \
+#     --no-audit --no-optional --legacy-peer-deps
 
 #RUN npm i  --no-audit --no-optional --legacy-peer-deps
 
