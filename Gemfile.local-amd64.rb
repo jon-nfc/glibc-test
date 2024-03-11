@@ -48,8 +48,6 @@ gem 'foreman_git_templates', :git => "https://github.com/dm-drogeriemarkt/forema
 gem 'foreman_templates', :git => "https://github.com/theforeman/foreman_templates.git", :branch => 'v9.4.0'
 
 
-# possibly broken https://github.com/adamruzicka/foreman_probing/issues/9
-# gem 'foreman_probing', :git => "https://github.com/adamruzicka/foreman_probing.git", :branch => 'v0.0.4'
 
 gem 'foreman-tasks', :git => "https://github.com/theforeman/foreman-tasks.git", :branch => 'v9.1.0'
 
@@ -69,7 +67,7 @@ gem 'foreman_puppet', :git => "https://github.com/theforeman/foreman_puppet.git"
 # gem 'katello', :git => "https://github.com/Katello/katello.git", :branch => '4.11.0'
 # # gem 'puppet-candlepin', :git => "https://github.com/theforeman/puppet-candlepin.git", :branch => '15.1.0'
 
-# Latest
+
 
 ##################################### Error
 # #31 9.873 2024-03-11T09:06:50 [W|app|] ForemanProbing: skipping engine hook (undefined method `register_fact_importer' for FactImporter:Class)
@@ -83,10 +81,11 @@ gem 'foreman_puppet', :git => "https://github.com/theforeman/foreman_puppet.git"
 # gem 'foreman_probing', :git => "https://github.com/adamruzicka/foreman_probing.git", :branch => 'v0.0.4'
 
 
-
+# Latest
 gem 'foreman_setup', :git => "https://github.com/theforeman/foreman_setup.git", :branch => 'v8.0.1'
 
-gem 'foreman_theme_satellite', :git => "https://github.com/RedHatSatellite/foreman_theme_satellite.git", :branch => 'v13.2.4'
+# works, is black like awx looks like can be customized, see repo
+# gem 'foreman_theme_satellite', :git => "https://github.com/RedHatSatellite/foreman_theme_satellite.git", :branch => 'v13.2.4'
 
 
 
