@@ -61,12 +61,20 @@ gem 'foreman_ansible', :git => "https://github.com/theforeman/foreman_ansible.gi
 gem 'foreman_puppet', :git => "https://github.com/theforeman/foreman_puppet.git", :branch => 'v6.2.0'
 
 
-
-# May be required to link hosts to server. nope. read debian guide
-gem 'katello', :git => "https://github.com/Katello/katello.git", :branch => '4.11.0'
-
-gem 'puppet-candlepin', :git => "https://github.com/theforeman/puppet-candlepin.git", :branch => '15.1.0'
-
-
 # # only for icinga2
 # #gem 'foreman_monitoring'
+
+
+# # May be required to link hosts to server. nope. read debian guide
+# gem 'katello', :git => "https://github.com/Katello/katello.git", :branch => '4.11.0'
+# # gem 'puppet-candlepin', :git => "https://github.com/theforeman/puppet-candlepin.git", :branch => '15.1.0'
+
+# Latest
+gem 'foreman_probing', :git => "https://github.com/adamruzicka/foreman_probing.git", :branch => 'v0.0.4'
+
+gem 'foreman_setup', :git => "https://github.com/theforeman/foreman_setup.git", :branch => 'v8.0.1'
+
+gem 'foreman_theme_satellite', :git => "https://github.com/RedHatSatellite/foreman_theme_satellite.git", :branch => 'v13.2.4'
+
+
+

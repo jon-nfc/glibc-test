@@ -57,13 +57,24 @@ jobs:
       #     images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
 
+      # - uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
+      #   with:
+      #     context: .
+      #     # platforms: linux/arm64,linux/amd64
+      #     platforms: linux/amd64
+      #     push: true
+      #     tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:foreman-3.9.1-katello
+      #     file: Dockerfile
+      #     cache-from: type=gha
+      #     cache-to: type=gha,mode=max
+
       - uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
         with:
           context: .
           # platforms: linux/arm64,linux/amd64
           platforms: linux/amd64
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:foreman-3.9.1-katello
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:foreman-3.9.1-amd
           file: Dockerfile
           cache-from: type=gha
           cache-to: type=gha,mode=max
