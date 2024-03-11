@@ -70,7 +70,19 @@ gem 'foreman_puppet', :git => "https://github.com/theforeman/foreman_puppet.git"
 # # gem 'puppet-candlepin', :git => "https://github.com/theforeman/puppet-candlepin.git", :branch => '15.1.0'
 
 # Latest
-gem 'foreman_probing', :git => "https://github.com/adamruzicka/foreman_probing.git", :branch => 'v0.0.4'
+
+##################################### Error
+# #31 9.873 2024-03-11T09:06:50 [W|app|] ForemanProbing: skipping engine hook (undefined method `register_fact_importer' for FactImporter:Class)
+# #31 9.875 rake aborted!
+# #31 9.889 NameError: undefined local variable or method `belongs_to_host' for ForemanProbing::ProbingFacet(Table doesn't exist):Class
+# #31 9.889 Did you mean?  belongs_to
+# #31 9.889 /home/foreman/vendor/ruby/2.7.0/gems/activerecord-6.1.7.7/lib/active_record/dynamic_matchers.rb:22:in `method_missing'
+# #31 9.889 /home/foreman/app/models/concerns/facets/base.rb:8:in `block in <module:Base>'
+# #31 9.889 /home/foreman/vendor/ruby/2.7.0/gems/activesupport-6.1.7.7/lib/active_support/concern.rb:136:in `class_eval'
+# #31 9.889 /home/foreman/vendor/ruby/2.7.0/gems/activesupport-6.1.7.7/lib/active_support/concern.rb:136:in `append_features'
+# gem 'foreman_probing', :git => "https://github.com/adamruzicka/foreman_probing.git", :branch => 'v0.0.4'
+
+
 
 gem 'foreman_setup', :git => "https://github.com/theforeman/foreman_setup.git", :branch => 'v8.0.1'
 
